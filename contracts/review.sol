@@ -84,10 +84,10 @@ contract ReviewSystem {
         
         uint allAvgRating = 0;
 
-        if(Products[pid].totalReviewed > 0)
-            allAvgRating = Products[pid].avgRating / Products[pid].totalReviewed;
+        if(productDetails[pid].totalReviewed > 0)
+            allAvgRating = productDetails[pid].avgRating / productDetails[pid].totalReviewed;
         
-        return (Products[pid].productName, allAvgRating);
+        return (productDetails[pid].productName, allAvgRating);
     }
     
     function getUserComments(uint pid) public view returns (string memory ucomments) {
