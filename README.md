@@ -1,2 +1,2 @@
 # ReviewSystem
-Quorum Blockchain based review system
+Ethereum Blockchain based review system
