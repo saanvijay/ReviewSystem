@@ -1,87 +1,119 @@
-pragma solidity ^0.6.0;
+pragma solidity ^0.4.24;
+pragma experimental ABIEncoderV2;
 
-contract review {
+contract ReviewSystem {
     
     struct Product {
         string productName;
-        uint productId;
+        uint productPrice;
+        string productHash;
         uint avgRating;
         uint totalReviewed;
-        mapping(address => bool) hasReviewed;
-        mapping(address => uint) rating; 
-        mapping(address => string) comments; 
     }
     
-    mapping(uint => Product) Products;
+    Product[] public Products;
+    address[] public Users;
+    uint[]    public ProductIds;
+    
+    Product newProduct;
+    mapping (uint => Product)   productDetails;
+    mapping(uint => mapping (address => uint)) rating;
+    mapping(uint => mapping (address => string)) comments;
+    mapping(uint => mapping(address => bool)) IsProductReviewedByUser;
+    
     uint public TotalProducts;
     
     event addProductEvent( uint pid, string pname );
     event reviewProductEvent( uint pid, uint avgRating );
     
- 
     constructor() public {
         TotalProducts = 0;
     }
     
-    function addProduct(uint pid, string memory pname) public {
-        require(pid > 0, "Product ID required !");
-        require(keccak256(bytes(pname)) != keccak256(""), "Product Name required !"); 
+    function addProduct(string memory pname, uint price) public {
+        require(keccak256(bytes(pname)) != keccak256(""), "Product Name required !");
         
-        Product memory newProduct = Product({
-            productId: pid,
-            productName: pname,
-            avgRating: 0,
-            totalReviewed: 0
-        });
+        newProduct.productName = pname;
+        newProduct.productPrice = price;
+        newProduct.productHash = "0x00ff00ff";
+        newProduct.avgRating = 0;
+        newProduct.totalReviewed = 0;
         
-        Products[TotalProducts++] = newProduct;
-        emit addProductEvent(newProduct.productId, newProduct.productName);
+        TotalProducts++;
+        productDetails[TotalProducts + 111111] = newProduct;
+        
+        ProductIds.push(TotalProducts + 111111);
+        Products.push(newProduct);
+
+        
+        emit addProductEvent(TotalProducts, pname);
         
     }
     
-    function reviewProduct(uint productId, uint rating, string memory comments) public {
-        require(productId > 0, "Productid required !");
-        require(rating > 0 && rating <= 5, "Product rating should be in 1-5 range !");
-        require(Products[productId].hasReviewed[msg.sender] == false, "Product already reviewed by user !");
+    function getTotalProducts() public constant returns(uint) {
+        return TotalProducts;
+    }
+    
+    function getProduct(uint pid) public constant returns (Product) {
+        return productDetails[pid];
+    }
+     
+    
+    
+    function reviewProduct(uint productId, uint urating, string memory ucomments) public {
+        require(productId >= 0, "Productid required !");
+        require(urating > 0 && urating <= 5, "Product rating should be in 1-5 range !");
+        require(IsProductReviewedByUser[productId][msg.sender] == false, "Product already reviewed by user !");
         
-        Product storage oldProduct = Products[productId];
-        oldProduct.hasReviewed[msg.sender] = true;
-        oldProduct.rating[msg.sender] = rating;
-        oldProduct.comments[msg.sender] = comments;
-        oldProduct.avgRating += rating * 10;
+        Product storage oldProduct = productDetails[productId];
+        oldProduct.avgRating += urating * 10;
         oldProduct.totalReviewed++;
         
-        emit reviewProductEvent(oldProduct.productId, oldProduct.avgRating);
+        rating[productId][msg.sender] = urating;
+        comments[productId][msg.sender] = ucomments;
+        
+        IsProductReviewedByUser[productId][msg.sender] = true;
+        Users.push(msg.sender);
+        
+        emit reviewProductEvent(productId, urating);
     }
     
-    function getProductDetails(uint pid) public view returns (string memory pname, uint avgRating) {
-        require(pid > 0, "Productid required !");
+    
+    function getProductAvgRating(uint pid) public view returns (string memory pname, uint avgRating) {
+        require(pid >= 0, "Productid required !");
         
-        Product storage product = Products[pid];
         uint allAvgRating = 0;
 
-        if(product.totalReviewed > 0)
-            allAvgRating = product.avgRating / product.totalReviewed;
+        if(Products[pid].totalReviewed > 0)
+            allAvgRating = Products[pid].avgRating / Products[pid].totalReviewed;
         
-        return (product.productName, allAvgRating);
+        return (Products[pid].productName, allAvgRating);
     }
     
-    function getUserComments(uint pid) public view returns (string memory comments) {
-         require(pid > 0, "Productid required !");
+    function getUserComments(uint pid) public view returns (string memory ucomments) {
+         require(pid >= 0, "Productid required !");
          
-         Product storage product = Products[pid]; 
-         
-         return product.comments[msg.sender];
+         return comments[pid][msg.sender];
          
     }
     
-    function getUserRating(uint pid) public view returns (uint rating) {
-         require(pid > 0, "Productid required !");
+    function getUserRating(uint pid) public view returns (uint urating) {
+         require(pid >= 0, "Productid required !");
          
-         Product storage product = Products[pid];
-         
-         return product.rating[msg.sender];
+         return rating[pid][msg.sender];
          
     }
+    
+    function getAllProductDetailes() public constant returns (Product[]) {
+        
+        return Products;
+    }
+    
+    function getAllUsers() public constant returns (address[]) {
+        
+        return Users;
+    }
+    
+    
     
 }
