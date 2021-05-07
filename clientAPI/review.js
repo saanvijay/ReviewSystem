@@ -420,10 +420,9 @@ const abi = [
 		"type": "function"
 	}
 ];
-const address = '0x85b43b889f1ce01df469e17f736df1824e44a3ea';
+const address = '0x232d14c7544b6441088d68920b26773881c629ae';
 const reviewProduct = async function (from, productid, rating, comments, passphrase) {
         try {
-                console.log(from, to, passphrase);
                 const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
                 const contract = new web3.eth.Contract(abi, address);
                 let isValidTransaction = false;
@@ -448,7 +447,7 @@ const reviewProduct = async function (from, productid, rating, comments, passphr
 
 const addProduct = async function (from, productname, price, imagehash, passphrase) {
     try {
-            console.log(from, to, passphrase);
+            
             const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
             const contract = new web3.eth.Contract(abi, address);
             let isValidTransaction = false;
@@ -466,7 +465,7 @@ const addProduct = async function (from, productname, price, imagehash, passphra
             }
     }
     catch (error) {
-            logger.error('###### addProduct - Failed to review the product %s for user: %s with error %s', productid, from, error.toString())
+            logger.error('###### addProduct - Failed to review the product %s for user: %s with error %s', productname, from, error.toString())
             return 'failed ' + error.toString();
     }
 }

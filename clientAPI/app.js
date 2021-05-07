@@ -9,13 +9,13 @@ log4js.configure({
           default: { appenders: ['out'], level: 'info' },
         }
 });
-var logger = log4js.getLogger('RMSAPI');
+var logger = log4js.getLogger('REVIEWSYS');
 const WebSocketServer = require('ws');
 var express = require('express');
 var bodyParser = require('body-parser');
 var account = require('./account.js');
-var balance = require('./product.js');
-var transfer = require('./review.js');
+var product = require('./product.js');
+var review = require('./review.js');
 var http = require('http');
 var util = require('util');
 const fs = require('fs');
@@ -26,11 +26,14 @@ var port = 3000;
 var blockchainPort = 8545;
 let constraint = 0;
 let user = '';
-let validity = 0;
+let productid = 0;
 let from = '';
-let to = '';
-let coins = 0;
 let passphrase ='';
+let productname ='';
+let price = 0;
+let imagehash = '';
+let rating = '';
+let comments = '';
 
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// SET CONFIGURATIONS ///////////////////////////
@@ -206,7 +209,7 @@ app.get('/getProductAvgRating/:productid', awaitHandler(async (req, res) => {
     const productid = req.params.productid;
     let response = await product.getProductAvgRating(productid);
     if (response && typeof response !== 'string') {
-        res.json(response);
+        res.json({productname : response[0], avgRating: parseInt(response[1])/10});
     } else {
         logger.error('##### GET on getProductAvgRating - Failed ');
         res.json({ success: false, message: response });
@@ -283,6 +286,47 @@ app.get('/getUserComments/:productid/:user', awaitHandler(async (req, res) => {
     }
 }));
 
+// Get user reviewed details for particular user for productid
+app.get('/getReviewedDetails/:productid/:user', awaitHandler(async (req, res) => {
+    logger.info('================ GET getUserComments');
+    
+    const productid = req.params.productid;
+    const user = req.params.user;
+    let response = await product.getReviewedDetails(productid, user);
+    if (response && typeof response !== 'string') {
+        res.json({User: user, Comments: response[0], Rating: response[1], DateOfReview: (new Date(parseInt(response[2] * 1000))).toUTCString()});
+    } else {
+        logger.error('##### GET on getUserComments - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get user reviewed details for particular user for productid
+app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
+    logger.info('================ GET getAllReviewedDetails');
+    
+    const productid = req.params.productid;
+    var allReviews = [];
+
+    const allusers = await product.getAllUsersForProduct(productid);
+    for (var i = 0; i < allusers.length; i++) {
+        let response = await product.getReviewedDetails(productid, allusers[i]);
+        var singleReview = {};
+        singleReview.User = allusers[i];
+        singleReview.Comments = response[0];
+        singleReview.Rating = response[1];
+        singleReview.DateOfReview = (new Date(parseInt(response[2] * 1000))).toUTCString();
+
+        allReviews.push(singleReview);
+    }
+    
+    if (allReviews && typeof allReviews !== 'string') {
+        res.json(allReviews);
+    } else {
+        logger.error('##### GET on getUserComments - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
 
 // Get user rating for particular user for productid
 app.get('/getUserRating/:productid/:user', awaitHandler(async (req, res) => {

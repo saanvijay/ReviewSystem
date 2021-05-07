@@ -415,7 +415,7 @@ const abi = [
 	}
 ];
 
-const address = '0x85b43b889f1ce01df469e17f736df1824e44a3ea';
+const address = '0x232d14c7544b6441088d68920b26773881c629ae';
 
 const getProductAvgRating = async function (productid) {
     try {
@@ -456,6 +456,21 @@ const getProductDetails = async function (productid) {
     }
 }
 
+const getReviewedDetails = async function (productid, user) {
+	try {
+        const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
+        const contract = new web3.eth.Contract(abi, address);
+        const userComments = await contract.methods.getUserComments(productid, user).call();
+		const userRating = await contract.methods.getUserRating(productid, user).call();
+		const dateOfReview = await contract.methods.getUserDateOfReview(productid, user).call();
+
+        return [userComments, userRating, dateOfReview];
+    }
+    catch (error) {
+        logger.error('###### getAllProductDetailes - Failed to get all product details: with error %s', error.toString())
+        return 'failed ' + error.toString();
+    }
+}
 const getAllProductDetailes = async function () {
     try {
         const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
@@ -529,6 +544,7 @@ exports.getAllUsersForProduct = getAllUsersForProduct;
 exports.getUserComments = getUserComments;
 exports.getUserRating = getUserRating;
 exports.getUserDateOfReview = getUserDateOfReview;
+exports.getReviewedDetails = getReviewedDetails;
 
 
 
