@@ -21,6 +21,10 @@ const abi = [
 			{
 				"name": "price",
 				"type": "uint256"
+			},
+			{
+				"name": "imagehash",
+				"type": "string"
 			}
 		],
 		"name": "addProduct",
@@ -43,6 +47,10 @@ const abi = [
 			{
 				"name": "ucomments",
 				"type": "string"
+			},
+			{
+				"name": "reviewDate",
+				"type": "uint256"
 			}
 		],
 		"name": "reviewProduct",
@@ -99,6 +107,10 @@ const abi = [
 			{
 				"components": [
 					{
+						"name": "productId",
+						"type": "uint256"
+					},
+					{
 						"name": "productName",
 						"type": "string"
 					},
@@ -129,8 +141,13 @@ const abi = [
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "getAllUsers",
+		"inputs": [
+			{
+				"name": "pid",
+				"type": "uint256"
+			}
+		],
+		"name": "getAllUsersForProduct",
 		"outputs": [
 			{
 				"name": "",
@@ -149,10 +166,52 @@ const abi = [
 				"type": "uint256"
 			}
 		],
+		"name": "getCurrentUserComments",
+		"outputs": [
+			{
+				"name": "ucomments",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "pid",
+				"type": "uint256"
+			}
+		],
+		"name": "getCurrentUserRating",
+		"outputs": [
+			{
+				"name": "urating",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "pid",
+				"type": "uint256"
+			}
+		],
 		"name": "getProduct",
 		"outputs": [
 			{
 				"components": [
+					{
+						"name": "productId",
+						"type": "uint256"
+					},
 					{
 						"name": "productName",
 						"type": "string"
@@ -225,6 +284,10 @@ const abi = [
 			{
 				"name": "pid",
 				"type": "uint256"
+			},
+			{
+				"name": "user",
+				"type": "address"
 			}
 		],
 		"name": "getUserComments",
@@ -244,6 +307,33 @@ const abi = [
 			{
 				"name": "pid",
 				"type": "uint256"
+			},
+			{
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getUserDateOfReview",
+		"outputs": [
+			{
+				"name": "reviewDate",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "pid",
+				"type": "uint256"
+			},
+			{
+				"name": "user",
+				"type": "address"
 			}
 		],
 		"name": "getUserRating",
@@ -287,6 +377,10 @@ const abi = [
 		"name": "Products",
 		"outputs": [
 			{
+				"name": "productId",
+				"type": "uint256"
+			},
+			{
 				"name": "productName",
 				"type": "string"
 			},
@@ -324,28 +418,9 @@ const abi = [
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "Users",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
 	}
 ];
-const address = '0xd2aea067e0c2a0d2662d91ba8153effbb2517b29';
+const address = '0x85b43b889f1ce01df469e17f736df1824e44a3ea';
 const reviewProduct = async function (from, productid, rating, comments, passphrase) {
         try {
                 console.log(from, to, passphrase);
@@ -357,7 +432,7 @@ const reviewProduct = async function (from, productid, rating, comments, passphr
                 const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
                 console.log(unlock);
                 
-                const response = await contract.methods.reviewProduct(productid, rating, comments).send({ from: from });
+                const response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
                 console.log(response);
                 if (!response) {
                         return "Unable to review/Insufficient Balance";
@@ -371,7 +446,7 @@ const reviewProduct = async function (from, productid, rating, comments, passphr
         }
 }
 
-const addProduct = async function (productname, price, from, passphrase) {
+const addProduct = async function (from, productname, price, imagehash, passphrase) {
     try {
             console.log(from, to, passphrase);
             const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
@@ -382,7 +457,7 @@ const addProduct = async function (productname, price, from, passphrase) {
             const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
             console.log(unlock);
             
-            const response = await contract.methods.addProduct(productname, price).send({ from: from });
+            const response = await contract.methods.addProduct(productname, price, imagehash).send({ from: from });
             console.log(response);
             if (!response) {
                     return "Unable to add product/Insufficient Balance";

@@ -20,6 +20,7 @@ contract ReviewSystem {
     mapping (uint => Product)   productDetails;
     mapping(uint => mapping (address => uint)) rating;
     mapping(uint => mapping (address => string)) comments;
+    mapping(uint => mapping (address => uint)) dateOfReview;
     mapping(uint => mapping(address => bool)) IsProductReviewedByUser;
     
     uint public TotalProducts;
@@ -31,14 +32,14 @@ contract ReviewSystem {
         TotalProducts = 0;
     }
     
-    function addProduct(string memory pname, uint price) public {
+    function addProduct(string memory pname, uint price, string memory imagehash) public {
         require(keccak256(bytes(pname)) != keccak256(""), "Product Name required !");
         
         TotalProducts++;
         
         newProduct.productName = pname;
         newProduct.productPrice = price;
-        newProduct.productHash = "0x00ff00ff";
+        newProduct.productHash = imagehash;
         newProduct.avgRating = 0;
         newProduct.totalReviewed = 0;
         newProduct.productId = TotalProducts + 111110;
@@ -64,7 +65,7 @@ contract ReviewSystem {
      
     
     
-    function reviewProduct(uint productId, uint urating, string memory ucomments) public {
+    function reviewProduct(uint productId, uint urating, string memory ucomments, uint reviewDate) public {
         require(productId >= 0, "Productid required !");
         require(urating > 0 && urating <= 5, "Product rating should be in 1-5 range !");
         require(IsProductReviewedByUser[productId][msg.sender] == false, "Product already reviewed by user !");
@@ -75,6 +76,7 @@ contract ReviewSystem {
         
         rating[productId][msg.sender] = urating;
         comments[productId][msg.sender] = ucomments;
+        dateOfReview[productId][msg.sender] = reviewDate;
         
         IsProductReviewedByUser[productId][msg.sender] = true;
         Users[productId].push(msg.sender);
@@ -119,6 +121,13 @@ contract ReviewSystem {
          require(pid >= 0, "Productid required !");
          
          return rating[pid][user];
+         
+    }
+    
+    function getUserDateOfReview(uint pid, address user) public view returns (uint reviewDate) {
+         require(pid >= 0, "Productid required !");
+         
+         return dateOfReview[pid][user];
          
     }
     

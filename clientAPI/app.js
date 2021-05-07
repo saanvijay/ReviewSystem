@@ -122,13 +122,13 @@ app.get('/listAllAccounts', awaitHandler(async (req, res) => {
 app.post('/reviewProduct', awaitHandler(async (req, res) => {
     logger.info('================ POST reviewProduct');
     from = req.body.from;
-    to = req.body.productid;
+    productid = req.body.productid;
     rating = req.body.rating;
     comments = req.body.comments;
     passphrase = req.body.passphrase;
 
     var response = "";
-    response = await transfer.reviewProduct(from, productid, rating, comments, passphrase);
+    response = await review.reviewProduct(from, productid, rating, comments, passphrase);
     
     if (response != "") {
         res.json({ success: true, txid: response });
@@ -138,12 +138,32 @@ app.post('/reviewProduct', awaitHandler(async (req, res) => {
     }
 }));
 
+// Add product
+app.post('/addProduct', awaitHandler(async (req, res) => {
+    logger.info('================ POST addProduct');
+    from = req.body.from;
+    productname = req.body.productname;
+    price = req.body.price;
+    imagehash = req.body.imagehash;
+    passphrase = req.body.passphrase;
+
+    var response = "";
+    response = await review.addProduct(from, productname, price, imagehash, passphrase);
+    
+    if (response != "") {
+        res.json({ success: true, txid: response });
+    } else {
+        logger.error('##### POST on addProduct - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
 // Get transaction details
 app.get('/transactionDetails/:txid', awaitHandler(async (req, res) => {
-    logger.info('================ POST transactionDetails');
+    logger.info('================ GET transactionDetails');
     
     const txid = req.params.txid;
-    let response = await transfer.getTransactionDetails(txid);
+    let response = await review.getTransactionDetails(txid);
     if (response && typeof response !== 'string') {
         res.json(response);
     } else {
@@ -175,6 +195,122 @@ app.post('/unlockAccount', awaitHandler(async (req, res) => {
         res.json(response);
     } else {
         logger.error('##### POST on unlockAccount - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get product average rating
+app.get('/getProductAvgRating/:productid', awaitHandler(async (req, res) => {
+    logger.info('================ GET getProductAvgRating');
+    
+    const productid = req.params.productid;
+    let response = await product.getProductAvgRating(productid);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getProductAvgRating - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get total number of products in the review system
+app.get('/getTotalProducts', awaitHandler(async (req, res) => {
+    logger.info('================ GET getTotalProducts');
+    
+    let response = await product.getTotalProducts();
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getTotalProducts - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get product details for productid
+app.get('/getProductDetails/:productid', awaitHandler(async (req, res) => {
+    logger.info('================ GET getProductDetails');
+    
+    const productid = req.params.productid;
+    let response = await product.getProductDetails(productid);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getProductDetails - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+
+// Get all product details
+app.get('/getAllProductDetailes', awaitHandler(async (req, res) => {
+    logger.info('================ GET getAllProductDetailes');
+    
+    let response = await product.getAllProductDetailes();
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getAllProductDetailes - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get all users for productid
+app.get('/getAllUsersForProduct/:productid', awaitHandler(async (req, res) => {
+    logger.info('================ GET getAllUsersForProduct');
+    
+    const productid = req.params.productid;
+    let response = await product.getAllUsersForProduct(productid);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getAllUsersForProduct - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+// Get user comments for particular user for productid
+app.get('/getUserComments/:productid/:user', awaitHandler(async (req, res) => {
+    logger.info('================ GET getUserComments');
+    
+    const productid = req.params.productid;
+    const user = req.params.user;
+    let response = await product.getUserComments(productid, user);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getUserComments - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+
+// Get user rating for particular user for productid
+app.get('/getUserRating/:productid/:user', awaitHandler(async (req, res) => {
+    logger.info('================ GET getUserRating');
+    
+    const productid = req.params.productid;
+    const user = req.params.user;
+    let response = await product.getUserRating(productid, user);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getUserRating - Failed ');
+        res.json({ success: false, message: response });
+    }
+}));
+
+
+// Get user rdate of review for productid
+app.get('/getUserDateOfReview/:productid/:user', awaitHandler(async (req, res) => {
+    logger.info('================ GET getUserDateOfReview');
+    
+    const productid = req.params.productid;
+    const user = req.params.user;
+    let response = await product.getUserDateOfReview(productid, user);
+    if (response && typeof response !== 'string') {
+        res.json(response);
+    } else {
+        logger.error('##### GET on getUserDateOfReview - Failed ');
         res.json({ success: false, message: response });
     }
 }));
