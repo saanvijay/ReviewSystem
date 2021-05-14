@@ -41,7 +41,7 @@ class ProductsForm extends React.Component
         return(
                                         
             <form onSubmit = {this.infoSubmit} autoComplete="off">
-            Add New Product
+            <b>Add New Product</b>
             <div className="form-group">
                 <label>User</label>
                 <input type="text" class="form-control" placeholder="Enter Wallet Address" 

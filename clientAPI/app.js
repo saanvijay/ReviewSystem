@@ -101,10 +101,10 @@ app.post('/createAccount', awaitHandler(async (req, res) => {
     var passphrase = req.body.passphrase;
     let response = await account.createAccount(passphrase);
     if (response && typeof response !== 'string') {
-       logger.info('##### POST on wallet - wallet address %s', response);
+       logger.info('##### Create account/wallet failed - %s', response);
         res.json(response);
     } else {
-        logger.error('##### POST on wallet - Failed ');
+        logger.error('##### Create account/wallet failed');
         res.json({ success: false, message: response });
     }
 }));
@@ -116,7 +116,7 @@ app.get('/listAllAccounts', awaitHandler(async (req, res) => {
     if (response && typeof response !== 'string') {
         res.json({success: true, accounts: response});
     } else {
-        logger.error('##### POST on wallet - Failed ');
+        logger.error('##### listAllAccounts - Failed ');
         res.json({ success: false, message: response });
     }
 }));

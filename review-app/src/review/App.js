@@ -36,7 +36,7 @@ class App extends React.Component
     getAllProducts() {
         let i=0;
         axios.get("http://localhost:8000/getAllProductDetailes").then( res => {
-            
+            console.log(res);
             this.setState({
                 productData:res.data
             })

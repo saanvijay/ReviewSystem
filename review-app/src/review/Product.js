@@ -18,7 +18,7 @@ class ProductForm extends React.Component
         <th>Price(Rs.)</th>
         <th>ImageHash</th>
         <th>AvgRating</th>
-        <th>TotalReviewd</th>
+        <th>TotalReviewed</th>
       </tr>
     </thead>
     <tbody>
@@ -27,12 +27,12 @@ class ProductForm extends React.Component
         (
             this.props.getProductData.map( prod =>
             <tr key = {prod.productId}>
-                <td> {prod.[0]}</td>
-                <td> {prod.[1]}</td>
-                <td> {prod.[2]} </td>
-                <td> {prod.[3]} </td>
-                <td> {prod.[4]} </td>
-                <td> {prod.[5]} </td>
+                <td> {prod.productid}</td>
+                <td> {prod.productName}</td>
+                <td> {prod.Price} </td>
+                <td> {prod.ImageHash} </td>
+                <td> {prod.avgRating} </td>
+                <td> {prod.totalReviewed} </td>
                 <td> <button className = "btn btn-primary" 
                 onClick = {
                     event => {
