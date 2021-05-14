@@ -288,15 +288,15 @@ app.get('/getUserComments/:productid/:user', awaitHandler(async (req, res) => {
 
 // Get user reviewed details for particular user for productid
 app.get('/getReviewedDetails/:productid/:user', awaitHandler(async (req, res) => {
-    logger.info('================ GET getUserComments');
+    logger.info('================ GET getReviewedDetails');
     
     const productid = req.params.productid;
     const user = req.params.user;
     let response = await product.getReviewedDetails(productid, user);
     if (response && typeof response !== 'string') {
-        res.json({User: user, Comments: response[0], Rating: response[1], DateOfReview: (new Date(parseInt(response[2] * 1000))).toUTCString()});
+        res.json({response});
     } else {
-        logger.error('##### GET on getUserComments - Failed ');
+        logger.error('##### GET on getReviewedDetails - Failed ');
         res.json({ success: false, message: response });
     }
 }));
@@ -311,19 +311,14 @@ app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
     const allusers = await product.getAllUsersForProduct(productid);
     for (var i = 0; i < allusers.length; i++) {
         let response = await product.getReviewedDetails(productid, allusers[i]);
-        var singleReview = {};
-        singleReview.User = allusers[i];
-        singleReview.Comments = response[0];
-        singleReview.Rating = response[1];
-        singleReview.DateOfReview = (new Date(parseInt(response[2] * 1000))).toUTCString();
 
-        allReviews.push(singleReview);
+        allReviews.push(response);
     }
     
     if (allReviews && typeof allReviews !== 'string') {
         res.json(allReviews);
     } else {
-        logger.error('##### GET on getUserComments - Failed ');
+        logger.error('##### GET on getAllReviewedDetails - Failed ');
         res.json({ success: false, message: response });
     }
 }));

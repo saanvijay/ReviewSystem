@@ -96,37 +96,11 @@ const abi = [
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "getAllProductDetailes",
+		"name": "getAllProductPids",
 		"outputs": [
 			{
-				"components": [
-					{
-						"name": "productId",
-						"type": "uint256"
-					},
-					{
-						"name": "productName",
-						"type": "string"
-					},
-					{
-						"name": "productPrice",
-						"type": "uint256"
-					},
-					{
-						"name": "productHash",
-						"type": "string"
-					},
-					{
-						"name": "avgRating",
-						"type": "uint256"
-					},
-					{
-						"name": "totalReviewed",
-						"type": "uint256"
-					}
-				],
 				"name": "",
-				"type": "tuple[]"
+				"type": "uint256[]"
 			}
 		],
 		"payable": false,
@@ -203,10 +177,6 @@ const abi = [
 			{
 				"components": [
 					{
-						"name": "productId",
-						"type": "uint256"
-					},
-					{
 						"name": "productName",
 						"type": "string"
 					},
@@ -225,6 +195,10 @@ const abi = [
 					{
 						"name": "totalReviewed",
 						"type": "uint256"
+					},
+					{
+						"name": "users",
+						"type": "address[]"
 					}
 				],
 				"name": "",
@@ -362,45 +336,6 @@ const abi = [
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "Products",
-		"outputs": [
-			{
-				"name": "productId",
-				"type": "uint256"
-			},
-			{
-				"name": "productName",
-				"type": "string"
-			},
-			{
-				"name": "productPrice",
-				"type": "uint256"
-			},
-			{
-				"name": "productHash",
-				"type": "string"
-			},
-			{
-				"name": "avgRating",
-				"type": "uint256"
-			},
-			{
-				"name": "totalReviewed",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
 		"inputs": [],
 		"name": "TotalProducts",
 		"outputs": [
@@ -414,8 +349,7 @@ const abi = [
 		"type": "function"
 	}
 ];
-
-const address = '0x232d14c7544b6441088d68920b26773881c629ae';
+const address = '0xc1b8cb2daaec5ba10d53b7ccd8dd88856079583a';
 
 const getProductAvgRating = async function (productid) {
     try {
@@ -458,16 +392,21 @@ const getProductDetails = async function (productid) {
 
 const getReviewedDetails = async function (productid, user) {
 	try {
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-        const contract = new web3.eth.Contract(abi, address);
-        const userComments = await contract.methods.getUserComments(productid, user).call();
-		const userRating = await contract.methods.getUserRating(productid, user).call();
-		const dateOfReview = await contract.methods.getUserDateOfReview(productid, user).call();
-
-        return [userComments, userRating, dateOfReview];
+        var reviewData = {};
+        const userComments = await this.getUserComments(productid, user);
+		const userRating = await this.getUserRating(productid, user);
+		const dateOfReview = await this.getUserDateOfReview(productid, user);
+	
+		reviewData.user = user;
+		reviewData.productid = productid;
+		reviewData.comments = userComments;
+		reviewData.rating = parseInt(userRating);
+		reviewData.dateOfProductReview = (new Date(parseInt(dateOfReview * 1000))).toUTCString();
+	
+        return reviewData;
     }
     catch (error) {
-        logger.error('###### getAllProductDetailes - Failed to get all product details: with error %s', error.toString())
+        logger.error('###### getReviewedDetails - Failed to get product reviewed details: with error %s', error.toString())
         return 'failed ' + error.toString();
     }
 }
@@ -475,8 +414,25 @@ const getAllProductDetailes = async function () {
     try {
         const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
         const contract = new web3.eth.Contract(abi, address);
-        const allProductDetails = await contract.methods.getAllProductDetailes().call();
-        return allProductDetails;
+        const allPids = await contract.methods.getAllProductPids().call();
+
+		var allProducts = []; 
+		
+		for (var i = 0; i < allPids.length; i++) {
+			var product = {};
+			const response = await contract.methods.getProduct(allPids[i]).call();
+			product.productid = parseInt(allPids[i]);
+			product.productName = response.productName;
+			product.Price = parseInt(response.productPrice);
+			product.ImageHash = response.productHash;
+			product.avgRating = (parseInt(response.avgRating) * 0.1)/response.totalReviewed;
+			product.totalReviewed = parseInt(response.totalReviewed);
+			product.allusers = response.users;
+			console.log(product.avgRating);
+			allProducts.push(product);
+
+		}
+        return allProducts;
     }
     catch (error) {
         logger.error('###### getAllProductDetailes - Failed to get all product details: with error %s', error.toString())

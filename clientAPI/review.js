@@ -102,37 +102,11 @@ const abi = [
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "getAllProductDetailes",
+		"name": "getAllProductPids",
 		"outputs": [
 			{
-				"components": [
-					{
-						"name": "productId",
-						"type": "uint256"
-					},
-					{
-						"name": "productName",
-						"type": "string"
-					},
-					{
-						"name": "productPrice",
-						"type": "uint256"
-					},
-					{
-						"name": "productHash",
-						"type": "string"
-					},
-					{
-						"name": "avgRating",
-						"type": "uint256"
-					},
-					{
-						"name": "totalReviewed",
-						"type": "uint256"
-					}
-				],
 				"name": "",
-				"type": "tuple[]"
+				"type": "uint256[]"
 			}
 		],
 		"payable": false,
@@ -209,10 +183,6 @@ const abi = [
 			{
 				"components": [
 					{
-						"name": "productId",
-						"type": "uint256"
-					},
-					{
 						"name": "productName",
 						"type": "string"
 					},
@@ -231,6 +201,10 @@ const abi = [
 					{
 						"name": "totalReviewed",
 						"type": "uint256"
+					},
+					{
+						"name": "users",
+						"type": "address[]"
 					}
 				],
 				"name": "",
@@ -368,45 +342,6 @@ const abi = [
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "Products",
-		"outputs": [
-			{
-				"name": "productId",
-				"type": "uint256"
-			},
-			{
-				"name": "productName",
-				"type": "string"
-			},
-			{
-				"name": "productPrice",
-				"type": "uint256"
-			},
-			{
-				"name": "productHash",
-				"type": "string"
-			},
-			{
-				"name": "avgRating",
-				"type": "uint256"
-			},
-			{
-				"name": "totalReviewed",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
 		"inputs": [],
 		"name": "TotalProducts",
 		"outputs": [
@@ -420,7 +355,7 @@ const abi = [
 		"type": "function"
 	}
 ];
-const address = '0x232d14c7544b6441088d68920b26773881c629ae';
+const address = '0xc1b8cb2daaec5ba10d53b7ccd8dd88856079583a';
 const reviewProduct = async function (from, productid, rating, comments, passphrase) {
         try {
                 const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));

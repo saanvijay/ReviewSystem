@@ -4,27 +4,28 @@ pragma experimental ABIEncoderV2;
 contract ReviewSystem {
     
     struct Product {
-        uint productId;
         string productName;
         uint productPrice;
         string productHash;
         uint avgRating;
         uint totalReviewed;
+        address[] users;
+    }
+    struct UserInput {
+        uint rating;
+        string comments;
+        uint dateOfReview;
+        bool IsProductReviewedByUser
     }
     
-    Product[] public Products;
-    uint[]    public ProductIds;
-    mapping (uint => address[])  Users;
-    
     Product newProduct;
-    mapping (uint => Product)   productDetails;
-    mapping(uint => mapping (address => uint)) rating;
-    mapping(uint => mapping (address => string)) comments;
-    mapping(uint => mapping (address => uint)) dateOfReview;
-    mapping(uint => mapping(address => bool)) IsProductReviewedByUser;
-    
+    UserInput newInput;
     uint public TotalProducts;
     
+    mapping(uint => Product)   productDetails;
+    uint[]    public ProductIds;
+    mapping(uint => mapping (address => UserInput)) userReview;
+   
     event addProductEvent( uint pid, string pname );
     event reviewProductEvent( uint pid, uint avgRating );
     
@@ -34,22 +35,19 @@ contract ReviewSystem {
     
     function addProduct(string memory pname, uint price, string memory imagehash) public {
         require(keccak256(bytes(pname)) != keccak256(""), "Product Name required !");
-        
-        TotalProducts++;
+
+         TotalProducts++;
+         uint pid = TotalProducts + 111110;
         
         newProduct.productName = pname;
         newProduct.productPrice = price;
         newProduct.productHash = imagehash;
         newProduct.avgRating = 0;
         newProduct.totalReviewed = 0;
-        newProduct.productId = TotalProducts + 111110;
-        
-        
-        productDetails[TotalProducts + 111110] = newProduct;
-        
-        ProductIds.push(TotalProducts + 111110);
-        Products.push(newProduct);
+        newProduct.users.push(msg.sender);
 
+        ProductIds.push(pid);
+        productDetails[pid] = newProduct;
         
         emit addProductEvent(TotalProducts, pname);
         
@@ -68,18 +66,20 @@ contract ReviewSystem {
     function reviewProduct(uint productId, uint urating, string memory ucomments, uint reviewDate) public {
         require(productId >= 0, "Productid required !");
         require(urating > 0 && urating <= 5, "Product rating should be in 1-5 range !");
-        require(IsProductReviewedByUser[productId][msg.sender] == false, "Product already reviewed by user !");
+        require(userReview[productId][msg.sender].IsProductReviewedByUser == false, "Product already reviewed by user !");
         
         Product storage oldProduct = productDetails[productId];
         oldProduct.avgRating += urating * 10;
         oldProduct.totalReviewed++;
+        oldProduct.users.push(msg.sender);
+
+        newInput.rating = urating;
+        newInput.comments = ucomments;
+        newInput.dateOfReview = reviewDate;
+        newInput.IsProductReviewedByUser = true;
         
-        rating[productId][msg.sender] = urating;
-        comments[productId][msg.sender] = ucomments;
-        dateOfReview[productId][msg.sender] = reviewDate;
+        userReview[productId][msg.sender] = newInput;
         
-        IsProductReviewedByUser[productId][msg.sender] = true;
-        Users[productId].push(msg.sender);
         
         emit reviewProductEvent(productId, urating);
     }
@@ -99,45 +99,44 @@ contract ReviewSystem {
     function getCurrentUserComments(uint pid) public view returns (string memory ucomments) {
          require(pid >= 0, "Productid required !");
          
-         return comments[pid][msg.sender];
+         return userReview[pid][msg.sender].comments;
          
     }
     
     function getCurrentUserRating(uint pid) public view returns (uint urating) {
          require(pid >= 0, "Productid required !");
          
-         return rating[pid][msg.sender];
+         return userReview[pid][msg.sender].rating;
          
     }
     
     function getUserComments(uint pid, address user) public view returns (string memory ucomments) {
          require(pid >= 0, "Productid required !");
          
-         return comments[pid][user];
+         return userReview[pid][user].comments;
          
     }
     
     function getUserRating(uint pid, address user) public view returns (uint urating) {
          require(pid >= 0, "Productid required !");
          
-         return rating[pid][user];
+         return userReview[pid][user].rating;
          
     }
     
     function getUserDateOfReview(uint pid, address user) public view returns (uint reviewDate) {
          require(pid >= 0, "Productid required !");
          
-         return dateOfReview[pid][user];
+         return userReview[pid][user].dateOfReview;
          
     }
     
-    function getAllProductDetailes() public constant returns (Product[]) {
-        
-        return Products;
+    function getAllProductPids() public constant returns (uint[]) {
+        return ProductIds;
     }
 
     function getAllUsersForProduct(uint pid) public constant returns  (address[]){
-       return Users[pid];
+       return productDetails[pid].users;
     }
 
    
