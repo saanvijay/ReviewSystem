@@ -1,11 +1,17 @@
 import React from 'react';
 import './App.css';
+import ReviewForm from './ReviewModal';
 
 
 class ProductForm extends React.Component 
 {
     constructor() {
         super();
+    }
+    
+    HandleOnClick(prod) {
+       // alert(prod.productid)
+        return (<div><ReviewForm/></div>)
     }
     render() {
         return(
@@ -34,11 +40,18 @@ class ProductForm extends React.Component
                 <td> {prod.avgRating} </td>
                 <td> {prod.totalReviewed} </td>
                 <td> <button className = "btn btn-primary" 
-                onClick = {
-                    event => {
-                        this.props.setData( prod )
+                onClick = { 
+                    () => {
+                        this.HandleOnClick(prod)
                     }
+                    // this.,
+                    // event => {
+                    //     this.props.setData( prod )
+                    //    // alert(prod.productid)
+                    //     <ReviewForm/>
+                    // }
                 }
+                
                 > Review Product </button></td>
             </tr>
             )
