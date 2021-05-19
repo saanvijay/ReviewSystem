@@ -12,16 +12,20 @@ class App extends React.Component
         this.state = {
             productData:[],
             reviewData:[],
-            wallets:[]
+            wallets:[],
+            lastTxId:""
         }
         this.CreateWallet = this.CreateWallet.bind(this);
     }
 
-    create = productData => {
+    addProduct = productData => {
         axios.post("http://localhost:8000/addProduct", productData).then( res => {
             console.log(res.data.txid);
             alert("Transaction Successful\nTxID: " + res.data.txid);
             this.getAllProducts();
+            this.setState({
+                lastTxId: res.data.txid
+            })
         })
     }
 
@@ -64,22 +68,49 @@ class App extends React.Component
         axios.post("http://localhost:8000/createAccount",{passphrase:this.refs.pass.value}).then( res => {
             alert("Wallet Created Successfully\nWallet Address : "+res.data.walletAddress);
             this.allwallets();
+
     })
     }
-    
+    viewLastTransaction = txid =>  {
+         axios.get("http://localhost:8000/transactionDetails/" + this.state.lastTxId).then( res => {
+            //  alert(
+            //      "Transaction Details" + 
+            //      "\nblockhash: " + res.data.blockHash +
+            //      "\nblockNumber: " + res.data.blockNumber +
+            //      "\ncumulativeGasUsed: " + res.data.cumulativeGasUsed +
+            //      "\nfrom: " + res.data.from +
+            //      "\ngasUsed: " + res.data.gasUsed +
+            //      "\nstatus: " + res.data.status +
+            //      "\nto: " + res.data.to +
+            //      "\ntransactionHash: " + res.data.transactionHash +
+            //      "\ntransactionIndex: " + res.data.transactionIndex);
+              })
+             window.open('http://localhost:9000/#/transaction/' + this.state.lastTxId, '_blank');
+           
+    }
+    viewExplorer() {
+        window.open('http://localhost:9000', '_blank');
+    }
+
     render() {
         return(
             <div className = "container">
                 <div className = "row"> 
                     <div className = "col-6">
-                      <ProductsForm productData = {this.create} setForm = {this.state.reviewData}/>
-                      <p/>
-                      <b>Create Wallet</b>
+                    <b>Create Wallet</b>
                       <div>
                           Enter Passphrase
                             <input ref="pass" type="password" /><p/>
                             <button onClick={this.CreateWallet} class="btn btn-primary">Create Wallet</button>
                      </div>
+                      <ProductsForm productData = {this.addProduct} setForm = {this.state.reviewData}/><p/>
+                      <button onClick={this.viewLastTransaction} txid = {this.state.lastTxId} class="btn btn-primary">View Last Transaction</button>
+                      &nbsp;&nbsp;&nbsp; 
+                      
+                      <button onClick={this.viewExplorer}  class="btn btn-primary">View All Transactions</button>
+                      
+                      <p/>
+                      
                      <p/><p/><p/>
                      <div> 
                          <b>All Wallets</b>
