@@ -43,7 +43,7 @@ class ProductForm extends React.Component
                 <td> {prod.ImageHash} </td>
                 <td> {prod.avgRating} </td>
                 <td> {prod.totalReviewed} </td>
-                <td><ReviewDialog {...this.props.getProductData}/> </td>
+                <td><ReviewDialog {...prod}/> </td>
                 <td> <button className = "btn btn-primary"> View All Reviews </button></td>
             </tr>
             )
