@@ -52,7 +52,8 @@ class ProductForm extends React.Component
                     // }
                 }
                 
-                > Review Product </button></td>
+                > Review Now </button></td>
+                <td> <button className = "btn btn-primary"> View All Reviews </button></td>
             </tr>
             )
         ) : (

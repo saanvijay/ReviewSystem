@@ -102,7 +102,7 @@ class App extends React.Component
                           Enter Passphrase
                             <input ref="pass" type="password" /><p/>
                             <button onClick={this.CreateWallet} class="btn btn-primary">Create Wallet</button>
-                     </div>
+                     </div><p/><p/>
                       <ProductsForm productData = {this.addProduct} setForm = {this.state.reviewData}/><p/>
                       <button onClick={this.viewLastTransaction} txid = {this.state.lastTxId} class="btn btn-primary">View Last Transaction</button>
                       &nbsp;&nbsp;&nbsp; 
