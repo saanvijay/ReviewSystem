@@ -1,9 +1,10 @@
 import React from 'react';
 import ProductsForm from './Products';
 import ProductForm from './Product';
-import ReviewForm from './ReviewModal';
+import ReviewDialog from './ReviewModal';
 import axios from 'axios';
 import './App.css';
+
 
 class App extends React.Component 
 {
@@ -97,34 +98,55 @@ class App extends React.Component
             <div className = "container">
                 <div className = "row"> 
                     <div className = "col-6">
-                    <b>Create Wallet</b>
-                      <div>
-                          Enter Passphrase
-                            <input ref="pass" type="password" /><p/>
+                        <hr style={{
+                            color: 'green',
+                            backgroundColor: 'green',
+                            height: 5
+                        }}/>
+                    <label style={{color: 'brown', fontWeight: 'bold' }}>Create Wallet</label>
+                      <div className="form-group">
+                          Passphrase &nbsp;&nbsp;
+                            <input ref="pass" type="password" class="form-control" placeholder="Enter Passphrase"/>
                             <button onClick={this.CreateWallet} class="btn btn-primary">Create Wallet</button>
-                     </div><p/><p/>
+                     </div>
+                     <hr style={{
+                            color: 'green',
+                            backgroundColor: 'green',
+                            height: 5
+                        }}/>
+                     <p/><p/>
                       <ProductsForm productData = {this.addProduct} setForm = {this.state.reviewData}/><p/>
+                      <hr style={{
+                            color: 'green',
+                            backgroundColor: 'green',
+                            height: 5
+                        }}/>
                       <button onClick={this.viewLastTransaction} txid = {this.state.lastTxId} class="btn btn-primary">View Last Transaction</button>
                       &nbsp;&nbsp;&nbsp; 
                       
-                      <button onClick={this.viewExplorer}  class="btn btn-primary">View All Transactions</button>
+                    <button onClick={this.viewExplorer}  class="btn btn-primary">View All Transactions</button>
+                    <hr style={{
+                            color: 'green',
+                            backgroundColor: 'green',
+                            height: 5
+                        }}/>
                       
                       <p/>
                       
                      <p/><p/><p/>
                      <div> 
-                         <b>All Wallets</b>
+                         <label style={{color: 'brown', fontWeight: 'bold' }}>All Wallets</label>
                          <ul>
                                 {
                                 this.state.wallets.map(wallet => (
-                                    <li>{wallet}</li>
+                                    <li> {wallet}</li>
                                  ))
                                  }
                          </ul>
                      </div>
                     </div>
                     <div className="col-6">
-                      <ProductForm getProductData = {this.state.productData} setData = {this.reviewProduct}/>
+                      <ProductForm getProductData = {this.state.productData} show={true} setData = {this.reviewProduct}/>
                     </div>
                 </div>
             </div>

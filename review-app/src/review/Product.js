@@ -1,21 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState }from 'react';
 import './App.css';
-import ReviewForm from './ReviewModal';
+//import ReviewDialog from './ReviewModal';
+import Modal from 'react-modal';
+import ReviewDialog from './ReviewModal';
+
+Modal.setAppElement("#root");
+
 
 
 class ProductForm extends React.Component 
 {
     constructor() {
-        super();
+        super();   
     }
-    
+     
     HandleOnClick(prod) {
-       // alert(prod.productid)
-        return (<div><ReviewForm/></div>)
+        alert(prod.productid) 
     }
+
     render() {
         return(
-                                        
             <table className="table table-striped">
     <thead>
       <tr>
@@ -32,27 +36,14 @@ class ProductForm extends React.Component
         this.props.getProductData.length > 0 ?
         (
             this.props.getProductData.map( prod =>
-            <tr key = {prod.productId}>
+            <tr key = {prod.productid}>
                 <td> {prod.productid}</td>
                 <td> {prod.productName}</td>
                 <td> {prod.Price} </td>
                 <td> {prod.ImageHash} </td>
                 <td> {prod.avgRating} </td>
                 <td> {prod.totalReviewed} </td>
-                <td> <button className = "btn btn-primary" 
-                onClick = { 
-                    () => {
-                        this.HandleOnClick(prod)
-                    }
-                    // this.,
-                    // event => {
-                    //     this.props.setData( prod )
-                    //    // alert(prod.productid)
-                    //     <ReviewForm/>
-                    // }
-                }
-                
-                > Review Now </button></td>
+                <td><ReviewDialog {...this.props.getProductData}/> </td>
                 <td> <button className = "btn btn-primary"> View All Reviews </button></td>
             </tr>
             )
