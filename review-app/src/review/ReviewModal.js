@@ -8,12 +8,18 @@ class ReviewDialog extends React.Component {
    constructor(props) {
        super(props);
        this.state = {
-        isOpen:false
+        isOpen:false,
+        rating:""
     }
     this.reviewProductNow = this.reviewProductNow.bind(this);
    }
     
-  
+   infoChange = event => {
+    const {name, value} = event.target;
+    this.setState({
+        [name]: value
+    })
+}
      toggleModal = () => {
       if(this.state.isOpen) {
         this.setState({
@@ -33,7 +39,7 @@ class ReviewDialog extends React.Component {
            axios.post("http://localhost:8000/reviewProduct", {
            from:this.refs.wallet.value,
                productid:this.props.productid,
-               rating:this.refs.rating.vaue,
+               rating:this.state.rating,
               comments:this.refs.comments.value,
               passphrase:this.refs.pass.value
 
@@ -63,7 +69,7 @@ class ReviewDialog extends React.Component {
             </div>
             <div className="form-group">
                 <label>Rating:</label>
-                <input ref="rating" type="text" class="form-control" placeholder="Enter Rating" />
+                <input  type="number" class="form-control"  name="rating" onChange={this.infoChange} value={this.state.rating} placeholder="Enter Rating" />
             </div>
             <div className="form-group">
                 <label>Review Comments:</label>

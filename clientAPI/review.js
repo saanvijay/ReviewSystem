@@ -365,6 +365,7 @@ const reviewProduct = async function (from, productid, rating, comments, passphr
                 let currentTime = parseInt(date / 1000);
                 const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
                 console.log(unlock);
+                console.log(productid, rating, comments, currentTime);
                 
                 const response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
                 console.log(response);
