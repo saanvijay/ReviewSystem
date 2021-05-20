@@ -1,6 +1,14 @@
 # ReviewSystem
 Ethereum Blockchain based review system
 
+User can create his/her account using 'Create Wallet' functionality. After creating the wallet he/she can add new product to blockchain using 'Add Product' functionality, but to add the product user should have his/her wallet address and passphrase ready if not, you can't add new product. Blockchain will rect your proposal if the wallet address or passphrase is wrong. For a successfull 'Add Product' functionality user will get blockchain transaction-id which you can verify in Explorer.
+
+Once the product is successfully added, you can view the product in home page as list. If you notice carefully, the image will not stored in the localhost instead it will be in IPFS. User will get only IPFS image hash. 
+
+Any product which is added to the chain, user can review it. Again to review the product user should have his/her wallet address and his/her passphrase as well. Once reviewed, you can view all the reviews in the list. 
+
+All the data will be stored and verified in Ethereum Private Blockchain.
+
 [![Node.js](https://img.shields.io/badge/Node.js-14.15.4-blue.svg)](https://nodejs.org/)
 [![npm](https://img.shields.io/badge/npm-6.14.10-blue.svg)](https://www.npmjs.com/)
 ![Platforms](https://img.shields.io/badge/platform-osx%20%7C%20linux-lightgray.svg)
