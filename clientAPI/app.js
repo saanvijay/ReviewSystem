@@ -21,6 +21,7 @@ var util = require('util');
 const fs = require('fs');
 var app = express();
 var cors = require('cors');
+const { json } = require('body-parser');
 var host = 'localhost';
 var port = 8000;
 var blockchainPort = 8545;
@@ -301,6 +302,10 @@ app.get('/getReviewedDetails/:productid/:user', awaitHandler(async (req, res) =>
     }
 }));
 
+function onlyUniqueUsers(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
 // Get user reviewed details for particular user for productid
 app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
     logger.info('================ GET getAllReviewedDetails');
@@ -308,11 +313,14 @@ app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
     const productid = req.params.productid;
     var allReviews = [];
 
-    const allusers = await product.getAllUsersForProduct(productid);
-    for (var i = 0; i < allusers.length; i++) {
-        let response = await product.getReviewedDetails(productid, allusers[i]);
+    var allusers = await product.getAllUsersForProduct(productid);
+    var uniqueUsers = allusers.filter(onlyUniqueUsers);
 
-        allReviews.push(response);
+    for (var i = 0; i < uniqueUsers.length; i++) {
+        let response = await product.getReviewedDetails(productid, uniqueUsers[i]);
+        if (response) {
+            allReviews.push(response);
+        } 
     }
     
     if (allReviews && typeof allReviews !== 'string') {

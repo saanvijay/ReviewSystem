@@ -93,7 +93,7 @@ class ProductsForm extends React.Component
                 />
             </div>
             <div className="form-group">
-                <label>Product Image:</label>
+                <label>Product Image(IPFS):</label>
                 <input type="file" class="form-control"  
                 onChange = {this.infoChangeFile}
                 />

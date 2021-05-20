@@ -397,6 +397,9 @@ const getReviewedDetails = async function (productid, user) {
 		const userRating = await this.getUserRating(productid, user);
 		const dateOfReview = await this.getUserDateOfReview(productid, user);
 	
+		if (!parseInt(userRating)) {
+			return "";
+		}
 		reviewData.user = user;
 		reviewData.productid = productid;
 		reviewData.comments = userComments;
