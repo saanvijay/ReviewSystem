@@ -16,28 +16,28 @@ Ethereum Blockchain based review system
 
 ## Steps
 1. Setup Blockchain Network
-    1.1. Install Ethereum 
-    1.2. Create new geth account
-    1.3. Use puppet to configure Private blockchain network
-    1.4. Initialize network with genesis configuration
-    1.5. Bring-up geth network
+    - Install Ethereum 
+    - Create new geth account
+    - Use puppet to configure Private blockchain network
+    - Initialize network with genesis configuration
+    - Bring-up geth network
 
 2. Compile and Deploy smart-contract
-    2.1. Open remix and paste the smart-contract
-    2.2. Select the Solidity 4.24 version compiler and compile it.
-    2.3. Make sure you have dummy Ether in your wallet and in Remix click Deploy
-    2.4. Copy the contract address and ABI
-    2.5. Open clientAPI/product.js and clientAPI/review.js and add ABI and contract address
-    2.6. cd ClinetAPI; npm install; npm start
+    - Open remix and paste the smart-contract
+    - Select the Solidity 4.24 version compiler and compile it.
+    - Make sure you have dummy Ether in your wallet and in Remix click Deploy
+    - Copy the contract address and ABI
+    - Open clientAPI/product.js and clientAPI/review.js and add ABI and contract address
+    - cd ClinetAPI; npm install; npm start
 
 3. Configure Blockchain Explorer
-    3.1. git clone https://github.com/etherparty/explorer
-    3.2. cd explorer; npm start
+    - git clone https://github.com/etherparty/explorer
+    - cd explorer; npm start
 
 4. UI Setup
-    4.1. cd review-app
-    4.2. npm install
-    4.3. npm start
+    - cd review-app
+    - npm install
+    - npm start
 
 ## Home page
 ![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Home-Page.png)
