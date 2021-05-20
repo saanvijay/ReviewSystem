@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+const IPFS = require('ipfs-api');
+const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 
 
 class ProductsForm extends React.Component 
@@ -11,7 +13,8 @@ class ProductsForm extends React.Component
             Pname: "",
             Price:"",
             ImageHash:"",
-            Passphrase:""
+            Passphrase:"",
+            ImageBuffer:""
 
         }
     }
@@ -21,16 +24,39 @@ class ProductsForm extends React.Component
             [name]: value
         })
     }
+    infoChangeFile = event => {
+        event.preventDefault();
+        const file = event.target.files[0];
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = () => {
+            this.setState({
+                ImageBuffer: Buffer(reader.result)
+            })
+        }
+        console.log(this.state.ImageBuffer);
+    }
     infoSubmit = event => {
         event.preventDefault();
-        let data = {
-            from: this.state.User,
-            productname: this.state.Pname,
-            price: this.state.Price,
-            imagehash:this.state.ImageHash,
-            passphrase:this.state.Passphrase
-        }
-        this.props.productData(data);
+    
+         ipfs.files.add(this.state.ImageBuffer, (err, res) => {
+            if(!err) {
+                this.setState({
+                    ImageHash: res[0].hash
+                })
+                let data = {
+                    from: this.state.User,
+                    productname: this.state.Pname,
+                    price: this.state.Price,
+                    imagehash:this.state.ImageHash,
+                    passphrase:this.state.Passphrase
+                }
+                this.props.productData(data);
+                console.log("ImageHash is", this.state.ImageHash);
+            } else {
+                console.log(err);
+            }
+        })
     }
 
     componentWillReceiveProps(props) {
@@ -43,7 +69,7 @@ class ProductsForm extends React.Component
             <form onSubmit = {this.infoSubmit} autoComplete="off">
             <label style={{color: 'brown', fontWeight: 'bold' }}>Add New Product</label>
             <div className="form-group">
-                <label>User</label>
+                <label>User Wallet Address</label>
                 <input type="text" class="form-control" placeholder="Enter Wallet Address" 
                 onChange = {this.infoChange}
                 name = "User"
@@ -59,7 +85,7 @@ class ProductsForm extends React.Component
                 />
             </div>
             <div className="form-group">
-                <label>Price:</label>
+                <label>Price($.):</label>
                 <input type="number" class="form-control" placeholder="Enter Price" 
                 onChange = {this.infoChange}
                 name = "Price"
@@ -67,11 +93,9 @@ class ProductsForm extends React.Component
                 />
             </div>
             <div className="form-group">
-                <label>ImageHash:</label>
-                <input type="text" class="form-control" placeholder="Enter Imagehash" 
-                onChange = {this.infoChange}
-                name = "ImageHash"
-                value = {this.state.ImageHash}
+                <label>Product Image:</label>
+                <input type="file" class="form-control"  
+                onChange = {this.infoChangeFile}
                 />
             </div>
             <div className="form-group">

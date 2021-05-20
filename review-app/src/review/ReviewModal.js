@@ -32,7 +32,9 @@ class ReviewDialog extends React.Component {
       }
       
      }
-
+     reload() {
+      window.location.reload();
+     }
       
       reviewProductNow(props) {
          
@@ -44,7 +46,10 @@ class ReviewDialog extends React.Component {
               passphrase:this.refs.pass.value
 
              }).then( res => {
-            alert("ProductReviewed Successfully"+ res.data.txid);}
+            alert("ProductReviewed Successfully"+ res.data.txid);
+            this.reload();
+          }
+            
              );
            this.setState({isOpen:false});
         

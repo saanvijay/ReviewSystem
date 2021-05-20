@@ -51,6 +51,7 @@ class AllReviewsDialog extends React.Component {
           onRequestClose={this.toggleModal}
           contentLabel="View All Reviews"
         >
+          
            <div className="form-group">
                 <h1> All Users Review Details </h1>
                 <hr style={{
@@ -64,6 +65,7 @@ class AllReviewsDialog extends React.Component {
                 <label><h4>{this.props.productName}</h4></label> <p/>
                 <label><h3>Average Rating : </h3></label>
                 <label><h4>{this.props.avgRating}</h4></label> <p/>
+                <img  src={`https://ipfs.io/ipfs/${this.props.ImageHash}`}/>
             </div>
           <table className="table table-striped">
             <thead>
