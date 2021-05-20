@@ -355,7 +355,7 @@ const abi = [
 		"type": "function"
 	}
 ];
-const address = '0x002829ffb8de4891d8586936378574a08e550be7';
+const address = '0xdf06b8e80fe4d2426858bdb7e2a9f676dfaa9772';
 const reviewProduct = async function (from, productid, rating, comments, passphrase) {
         try {
                 const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));

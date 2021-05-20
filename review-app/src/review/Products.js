@@ -85,7 +85,7 @@ class ProductsForm extends React.Component
                 />
             </div>
             <div className="form-group">
-                <label>Price($.):</label>
+                <label>Price(US $.):</label>
                 <input type="number" class="form-control" placeholder="Enter Price" 
                 onChange = {this.infoChange}
                 name = "Price"

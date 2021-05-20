@@ -65,7 +65,7 @@ class AllReviewsDialog extends React.Component {
                 <label><h4>{this.props.productName}</h4></label> <p/>
                 <label><h3>Average Rating : </h3></label>
                 <label><h4>{this.props.avgRating}</h4></label> <p/>
-                <img  src={`https://ipfs.io/ipfs/${this.props.ImageHash}`}/>
+                <img  width="200" height="200" src={`https://ipfs.io/ipfs/${this.props.ImageHash}`}/>
             </div>
           <table className="table table-striped">
             <thead>

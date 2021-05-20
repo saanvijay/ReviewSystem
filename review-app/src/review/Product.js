@@ -26,7 +26,7 @@ class ProductForm extends React.Component
       <tr>
         <th>ProductID</th>
         <th>ProductName</th>
-        <th>Price($.)</th>
+        <th>Price(US$.)</th>
         <th>IPFS ImageHash</th>
         <th>AvgRating</th>
         <th>TotalReviewed</th>
