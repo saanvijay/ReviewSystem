@@ -41,7 +41,7 @@ class ProductForm extends React.Component
                 <td> {prod.productid}</td>
                 <td> {prod.productName}</td>
                 <td> {prod.Price} </td>
-                <td> {prod.ImageHash} </td>
+                <td> {prod.ImageHash} <img width="40" height="40" src={`https://ipfs.io/ipfs/${prod.ImageHash}`}/></td>
                 <td> {prod.avgRating} </td>
                 <td> {prod.totalReviewed} </td>
                 <td><ReviewDialog {...prod}/> </td>
