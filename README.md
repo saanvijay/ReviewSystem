@@ -39,6 +39,11 @@ Ethereum Blockchain based review system
     - npm install
     - npm start
 
+### Blockchain is running on port http://localhost:8545
+### NodeJS server is running on port http://localhost:8000
+### Blockchain Explorer is running on port http://localhost:9000
+### ReactJS server is running on port http://localhost:3000
+
 ## Home page
 ![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Home-Page.png)
 
