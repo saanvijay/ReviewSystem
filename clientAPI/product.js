@@ -349,7 +349,7 @@ const abi = [
 		"type": "function"
 	}
 ];
-const address = '0xc1b8cb2daaec5ba10d53b7ccd8dd88856079583a';
+const address = '0x002829ffb8de4891d8586936378574a08e550be7';
 
 const getProductAvgRating = async function (productid) {
     try {

@@ -15,7 +15,7 @@ contract ReviewSystem {
         uint rating;
         string comments;
         uint dateOfReview;
-        bool IsProductReviewedByUser
+        bool IsProductReviewedByUser;
     }
     
     Product newProduct;

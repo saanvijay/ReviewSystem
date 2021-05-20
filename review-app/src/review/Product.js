@@ -3,6 +3,7 @@ import './App.css';
 //import ReviewDialog from './ReviewModal';
 import Modal from 'react-modal';
 import ReviewDialog from './ReviewModal';
+import AllReviewsDialog from './AllReviews';
 
 Modal.setAppElement("#root");
 
@@ -20,7 +21,7 @@ class ProductForm extends React.Component
 
     render() {
         return(
-            <table className="table table-striped">
+    <table className="table table-striped">
     <thead>
       <tr>
         <th>ProductID</th>
@@ -44,7 +45,7 @@ class ProductForm extends React.Component
                 <td> {prod.avgRating} </td>
                 <td> {prod.totalReviewed} </td>
                 <td><ReviewDialog {...prod}/> </td>
-                <td> <button className = "btn btn-primary"> View All Reviews </button></td>
+                <td><AllReviewsDialog {...prod}/> </td>
             </tr>
             )
         ) : (

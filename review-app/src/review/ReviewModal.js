@@ -84,6 +84,7 @@ class ReviewDialog extends React.Component {
                 <input ref="pass" type="password" class="form-control" placeholder="Enter passphrase" />
             </div>
           </div>
+          <p/>
           <button className = "btn btn-primary" onClick={this.reviewProductNow}>Submit Review</button> 
           &nbsp;&nbsp;&nbsp; 
           <button className = "btn btn-primary" onClick={this.toggleModal}>Cancel Review</button>
