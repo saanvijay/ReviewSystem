@@ -1,6 +1,12 @@
 'use strict';
-var log4js = require('log4js');
+
 const express = require('express');
+var app = express();
+app.use(express.json());
+
+var cors = require('cors');
+
+var log4js = require('log4js');
 log4js.configure({
         appenders: {
           out: { type: 'stdout' },
@@ -10,15 +16,11 @@ log4js.configure({
         }
 });
 var logger = log4js.getLogger('REVIEWSYS');
-const WebSocketServer = require('ws');
-var bodyParser = require('body-parser');
+
 var account = require('./account.js');
 var product = require('./product.js');
 var review = require('./review.js');
 
-var app = express();
-var cors = require('cors');
-app.use(express.json());
 var host = process.env.NODE_CLIENT_API_HOST;
 var port = process.env.NODE_CLIENT_API_PORT;
 
@@ -37,25 +39,6 @@ let comments = '';
 ///////////////////////////////////////////////////////////////////////////////
 app.options('*', cors());
 app.use(cors());
-
-app.use(function(req, res, next) {
-        logger.info(' ##### New request for URL %s',req.originalUrl);
-        return next();
-});
-//wrapper to handle errors thrown by async functions. We can catch all
-//errors thrown by async functions in a single place, here in this function,
-//rather than having a try-catch in every function below. The 'next' statement
-//used here will invoke the error handler function - see the end of this script
-const awaitHandler = (fn) => {
-        return async (req, res, next) => {
-                try {
-                        await fn(req, res, next)
-                }
-                catch (err) {
-                        next(err)
-                }
-        }
-}
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// START SERVER /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,25 +54,14 @@ function getErrorMessage(field) {
         return response;
 }
 ///////////////////////////////////////////////////////////////////////////////
-//////////////////////////////// START WEBSOCKET SERVER ///////////////////////
-///////////////////////////////////////////////////////////////////////////////
-const wss = new WebSocketServer.Server({ server });
-wss.on('connection', function connection(ws) {
-        logger.info('****************** WEBSOCKET SERVER - received connection ************************');
-        ws.on('message', function incoming(message) {
-                console.log('##### Websocket Server received message: %s', message);
-        });
-        ws.send('something');
-});
-///////////////////////////////////////////////////////////////////////////////
 ///////////////////////// REST ENDPOINTS START HERE ///////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 // Health check - can be called by load balancer to check health of REST API
-app.get('/health', awaitHandler(async (req, res) => {
+app.get('/health', async (req, res) => {
         res.sendStatus(200);
-}));
+});
 // Create new wallet
-app.post('/createAccount', awaitHandler(async (req, res) => {
+app.post('/createAccount', async (req, res) => {
     logger.info('================ POST on create account');
     
     var passphrase = req.body.passphrase;
@@ -101,9 +73,9 @@ app.post('/createAccount', awaitHandler(async (req, res) => {
         logger.error('##### Create account/wallet failed');
         res.json({ success: false, message: response });
     }
-}));
+});
 // Create all accounts
-app.get('/listAllAccounts', awaitHandler(async (req, res) => {
+app.get('/listAllAccounts', async (req, res) => {
     logger.info('================ GET on list all accounts');
     
     let response = await account.listAllAccounts();
@@ -113,10 +85,10 @@ app.get('/listAllAccounts', awaitHandler(async (req, res) => {
         logger.error('##### listAllAccounts - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Review product
-app.post('/reviewProduct', awaitHandler(async (req, res) => {
+app.post('/reviewProduct', async (req, res) => {
     logger.info('================ POST reviewProduct');
     from = req.body.from;
     productid = req.body.productid;
@@ -133,10 +105,10 @@ app.post('/reviewProduct', awaitHandler(async (req, res) => {
         logger.error('##### POST on reviewProduct - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Add product
-app.post('/addProduct', awaitHandler(async (req, res) => {
+app.post('/addProduct', async (req, res) => {
     logger.info('================ POST addProduct');
     from = req.body.from;
     productname = req.body.productname;
@@ -153,10 +125,10 @@ app.post('/addProduct', awaitHandler(async (req, res) => {
         logger.error('##### POST on addProduct - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get transaction details
-app.get('/transactionDetails/:txid', awaitHandler(async (req, res) => {
+app.get('/transactionDetails/:txid', async (req, res) => {
     logger.info('================ GET transactionDetails');
     
     const txid = req.params.txid;
@@ -167,9 +139,9 @@ app.get('/transactionDetails/:txid', awaitHandler(async (req, res) => {
         logger.error('##### POST on transactionDetails - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 // lock account
-app.post('/lockAccount', awaitHandler(async (req, res) => {
+app.post('/lockAccount', async (req, res) => {
     logger.info('================ POST lockAccount');
     
     user = req.body.user;
@@ -180,9 +152,9 @@ app.post('/lockAccount', awaitHandler(async (req, res) => {
         logger.error('##### POST on lockAccount - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 // unlock account
-app.post('/unlockAccount', awaitHandler(async (req, res) => {
+app.post('/unlockAccount', async (req, res) => {
     logger.info('================ POST unlockAccount');
     
     var user = req.body.user;
@@ -194,10 +166,10 @@ app.post('/unlockAccount', awaitHandler(async (req, res) => {
         logger.error('##### POST on unlockAccount - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get product average rating
-app.get('/getProductAvgRating/:productid', awaitHandler(async (req, res) => {
+app.get('/getProductAvgRating/:productid', async (req, res) => {
     logger.info('================ GET getProductAvgRating');
     
     const productid = req.params.productid;
@@ -208,10 +180,10 @@ app.get('/getProductAvgRating/:productid', awaitHandler(async (req, res) => {
         logger.error('##### GET on getProductAvgRating - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get total number of products in the review system
-app.get('/getTotalProducts', awaitHandler(async (req, res) => {
+app.get('/getTotalProducts', async (req, res) => {
     logger.info('================ GET getTotalProducts');
     
     let response = await product.getTotalProducts();
@@ -221,10 +193,10 @@ app.get('/getTotalProducts', awaitHandler(async (req, res) => {
         logger.error('##### GET on getTotalProducts - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get product details for productid
-app.get('/getProductDetails/:productid', awaitHandler(async (req, res) => {
+app.get('/getProductDetails/:productid', async (req, res) => {
     logger.info('================ GET getProductDetails');
     
     const productid = req.params.productid;
@@ -235,11 +207,11 @@ app.get('/getProductDetails/:productid', awaitHandler(async (req, res) => {
         logger.error('##### GET on getProductDetails - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 
 // Get all product details
-app.get('/getAllProductDetailes', awaitHandler(async (req, res) => {
+app.get('/getAllProductDetailes', async (req, res) => {
     logger.info('================ GET getAllProductDetailes');
     
     let response = await product.getAllProductDetailes();
@@ -249,10 +221,10 @@ app.get('/getAllProductDetailes', awaitHandler(async (req, res) => {
         logger.error('##### GET on getAllProductDetailes - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get all users for productid
-app.get('/getAllUsersForProduct/:productid', awaitHandler(async (req, res) => {
+app.get('/getAllUsersForProduct/:productid', async (req, res) => {
     logger.info('================ GET getAllUsersForProduct');
     
     const productid = req.params.productid;
@@ -263,10 +235,10 @@ app.get('/getAllUsersForProduct/:productid', awaitHandler(async (req, res) => {
         logger.error('##### GET on getAllUsersForProduct - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get user comments for particular user for productid
-app.get('/getUserComments/:productid/:user', awaitHandler(async (req, res) => {
+app.get('/getUserComments/:productid/:user', async (req, res) => {
     logger.info('================ GET getUserComments');
     
     const productid = req.params.productid;
@@ -278,10 +250,10 @@ app.get('/getUserComments/:productid/:user', awaitHandler(async (req, res) => {
         logger.error('##### GET on getUserComments - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get user reviewed details for particular user for productid
-app.get('/getReviewedDetails/:productid/:user', awaitHandler(async (req, res) => {
+app.get('/getReviewedDetails/:productid/:user', async (req, res) => {
     logger.info('================ GET getReviewedDetails');
     
     const productid = req.params.productid;
@@ -293,14 +265,14 @@ app.get('/getReviewedDetails/:productid/:user', awaitHandler(async (req, res) =>
         logger.error('##### GET on getReviewedDetails - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 function onlyUniqueUsers(value, index, self) {
     return self.indexOf(value) === index;
   }
 
 // Get user reviewed details for particular user for productid
-app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
+app.get('/getAllReviewedDetails/:productid', async (req, res) => {
     logger.info('================ GET getAllReviewedDetails');
     
     const productid = req.params.productid;
@@ -322,10 +294,10 @@ app.get('/getAllReviewedDetails/:productid', awaitHandler(async (req, res) => {
         logger.error('##### GET on getAllReviewedDetails - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 // Get user rating for particular user for productid
-app.get('/getUserRating/:productid/:user', awaitHandler(async (req, res) => {
+app.get('/getUserRating/:productid/:user', async (req, res) => {
     logger.info('================ GET getUserRating');
     
     const productid = req.params.productid;
@@ -337,11 +309,11 @@ app.get('/getUserRating/:productid/:user', awaitHandler(async (req, res) => {
         logger.error('##### GET on getUserRating - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 
 
 // Get user rdate of review for productid
-app.get('/getUserDateOfReview/:productid/:user', awaitHandler(async (req, res) => {
+app.get('/getUserDateOfReview/:productid/:user', async (req, res) => {
     logger.info('================ GET getUserDateOfReview');
     
     const productid = req.params.productid;
@@ -353,7 +325,7 @@ app.get('/getUserDateOfReview/:productid/:user', awaitHandler(async (req, res) =
         logger.error('##### GET on getUserDateOfReview - Failed ');
         res.json({ success: false, message: response });
     }
-}));
+});
 /************************************************************************************
  * Error handler
  ************************************************************************************/
