@@ -20,7 +20,7 @@ class App extends React.Component
     }
 
     addProduct = productData => {
-        axios.post("http://localhost:8000/addProduct", productData).then( res => {
+        axios.post("http://localhost:8000/product/add", productData).then( res => {
             console.log(res.data.txid);
             alert("Transaction Successful\nTxID: " + res.data.txid);
             this.getAllProducts();
@@ -31,8 +31,7 @@ class App extends React.Component
     }
 
     allwallets = () => {
-        axios.get("http://localhost:8000/listAllAccounts").then( res => {
-            
+        axios.get("http://localhost:8000/account/listAll").then( res => {
             this.setState({
                 wallets : res.data.accounts.allAccounts
             })
@@ -55,7 +54,7 @@ class App extends React.Component
     }
 
     getAllProducts() {
-        axios.get("http://localhost:8000/getAllProductDetailes").then( res => {
+        axios.get("http://localhost:8000/product/getAllDetailes").then( res => {
           //  console.log(res);
             this.setState({
                 productData:res.data
@@ -66,14 +65,15 @@ class App extends React.Component
 
 
     CreateWallet() {
-        axios.post("http://localhost:8000/createAccount",{passphrase:this.refs.pass.value}).then( res => {
+        alert("calling create");
+        axios.post("http://localhost:8000/account/create",{passphrase:this.refs.pass.value}).then( res => {
             alert("Wallet Created Successfully\nWallet Address : "+res.data.walletAddress);
             this.allwallets();
 
     })
     }
     viewLastTransaction = txid =>  {
-         axios.get("http://localhost:8000/transactionDetails/" + this.state.lastTxId).then( res => {
+         axios.get("http://localhost:8000/review/transactionDetails/" + this.state.lastTxId).then( res => {
             //  alert(
             //      "Transaction Details" + 
             //      "\nblockhash: " + res.data.blockHash +

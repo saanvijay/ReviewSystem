@@ -37,7 +37,7 @@ class ReviewDialog extends React.Component {
   }
 
   reviewProductNow(props) {
-    axios.post("http://localhost:8000/reviewProduct", {
+    axios.post("http://localhost:8000/review/reviewnow", {
       from: this.refs.wallet.value,
       productid: this.props.productid,
       rating: this.state.rating,

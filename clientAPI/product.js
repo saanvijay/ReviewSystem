@@ -7,6 +7,10 @@ prodrouter.use(express.json());
 const Web3API = require('web3');
 require('dotenv/config');
 
+var cors = require('cors');
+prodrouter.options('*', cors());
+prodrouter.use(cors());
+
 var rpcURL = process.env.RPCURL;
 const abi = JSON.parse(process.env.ABI);
 const address = process.env.CONTRACTADDRESS;

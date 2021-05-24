@@ -2,6 +2,10 @@ const Web3API = require('web3');
 const express = require('express');
 const accountrouter = express.Router();
 
+var cors = require('cors');
+accountrouter.options('*', cors());
+accountrouter.use(cors());
+
 var blockchainURL = process.env.RPCURL;
 var log4js = require('log4js');
 log4js.configure({
