@@ -1,6 +1,6 @@
 'use strict';
 var log4js = require('log4js');
-const Web3 = require('web3');
+const express = require('express');
 log4js.configure({
         appenders: {
           out: { type: 'stdout' },
@@ -11,21 +11,17 @@ log4js.configure({
 });
 var logger = log4js.getLogger('REVIEWSYS');
 const WebSocketServer = require('ws');
-var express = require('express');
 var bodyParser = require('body-parser');
 var account = require('./account.js');
 var product = require('./product.js');
 var review = require('./review.js');
-var http = require('http');
-var util = require('util');
-const fs = require('fs');
+
 var app = express();
 var cors = require('cors');
-const { json } = require('body-parser');
-var host = 'localhost';
-var port = 8000;
-var blockchainPort = 8545;
-let constraint = 0;
+app.use(express.json());
+var host = process.env.NODE_CLIENT_API_HOST;
+var port = process.env.NODE_CLIENT_API_PORT;
+
 let user = '';
 let productid = 0;
 let from = '';
@@ -41,10 +37,7 @@ let comments = '';
 ///////////////////////////////////////////////////////////////////////////////
 app.options('*', cors());
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-        extended: false
-}));
+
 app.use(function(req, res, next) {
         logger.info(' ##### New request for URL %s',req.originalUrl);
         return next();
@@ -66,7 +59,7 @@ const awaitHandler = (fn) => {
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// START SERVER /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-var server = http.createServer(app).listen(port, function() {});
+var server = app.listen(port, function() {});
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  Listening on: http://%s:%s  ******************',host,port);
 server.timeout = 240000;
