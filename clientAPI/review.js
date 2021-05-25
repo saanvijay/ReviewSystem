@@ -1,7 +1,7 @@
 'use strict';
 
 var log4js = require('log4js');
-var logger = log4js.getLogger('review');
+var logger = log4js.getLogger('REVIEWSYS:REVIEW');
 const Web3API = require('web3');
 
 var express = require('express');
@@ -14,6 +14,8 @@ reviewrouter.use(cors());
 var rpcURL = process.env.RPCURL;
 const abi = JSON.parse(process.env.ABI);
 const address = process.env.CONTRACTADDRESS;
+const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
+const contract = new web3.eth.Contract(abi, address);
 
 // Review product
 reviewrouter.post('/reviewnow', async (req, res) => {
@@ -26,9 +28,7 @@ reviewrouter.post('/reviewnow', async (req, res) => {
         let passphrase = req.body.passphrase;
 
         var response = "";
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-        const contract = new web3.eth.Contract(abi, address);
-        let isValidTransaction = false;
+        
         let date = (new Date()).getTime();
         let currentTime = parseInt(date / 1000);
         const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
@@ -47,13 +47,11 @@ reviewrouter.get('/transactionDetails/:txid', async (req, res) => {
     logger.info('================ GET transactionDetails');
     try {
         const txid = req.params.txid;
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-        const contract = new web3.eth.Contract(abi, address);
-        const details = await web3.eth.getTransactionReceipt(txnHash);
+        const details = await web3.eth.getTransactionReceipt(txid);
         res.json(details);
     }
     catch(error) {
-        logger.error('##### POST on transactionDetails - Failed ');
+        logger.error('##### GET on transactionDetails - Failed ');
         res.json({ success: false, message: error.toString() });
     }
 });

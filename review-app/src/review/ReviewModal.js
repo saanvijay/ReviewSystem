@@ -2,6 +2,8 @@ import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class ReviewDialog extends React.Component {
@@ -45,7 +47,8 @@ class ReviewDialog extends React.Component {
       passphrase: this.refs.pass.value
 
     }).then(res => {
-      alert("ProductReviewed Successfully" + res.data.txid);
+      //alert("ProductReviewed Successfully" + res.data.txid);
+      toast.success(<div>ProductReviewed Successfully {res.data.txid}</div>);
       this.setState({ isOpen: false });
       this.reload();
     }
@@ -94,6 +97,7 @@ class ReviewDialog extends React.Component {
           &nbsp;&nbsp;&nbsp;
           <button className="btn btn-primary" onClick={this.toggleModal}>Cancel Review</button>
         </Modal>
+        <ToastContainer />
       </div>
 
     );

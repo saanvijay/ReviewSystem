@@ -34,10 +34,11 @@ app.options('*', cors());
 app.use(cors());
 
 // Start Server
-var server = app.listen(port, function() {});
+var server = app.listen(port, function() {
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  Listening on: http://%s:%s  ******************',host,port);
 server.timeout = 240000;
+});
 
 // Health check - can be called by load balancer to check health of REST API
 app.get('/health', async (req, res) => {

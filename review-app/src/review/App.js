@@ -4,6 +4,8 @@ import ProductForm from './Product';
 import ReviewDialog from './ReviewModal';
 import axios from 'axios';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class App extends React.Component 
@@ -22,7 +24,7 @@ class App extends React.Component
     addProduct = productData => {
         axios.post("http://localhost:8000/product/add", productData).then( res => {
             console.log(res.data.txid);
-            alert("Transaction Successful\nTxID: " + res.data.txid);
+            toast.success(<div>Transaction Successful {res.data.txid}</div>);
             this.getAllProducts();
             this.setState({
                 lastTxId: res.data.txid
@@ -65,9 +67,9 @@ class App extends React.Component
 
 
     CreateWallet() {
-        alert("calling create");
         axios.post("http://localhost:8000/account/create",{passphrase:this.refs.pass.value}).then( res => {
-            alert("Wallet Created Successfully\nWallet Address : "+res.data.walletAddress);
+            toast.success(<div>Wallet Created Successfully {res.data.walletAddress}</div>);
+            //, "Wallet Address : ", res.data.walletAddress);
             this.allwallets();
 
     })
@@ -149,6 +151,7 @@ class App extends React.Component
                       <ProductForm getProductData = {this.state.productData} show={true} setData = {this.reviewProduct}/>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         )
     }

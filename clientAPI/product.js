@@ -14,6 +14,8 @@ prodrouter.use(cors());
 var rpcURL = process.env.RPCURL;
 const abi = JSON.parse(process.env.ABI);
 const address = process.env.CONTRACTADDRESS;
+const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
+const contract = new web3.eth.Contract(abi, address);
 
 var log4js = require('log4js');
 log4js.configure({
@@ -31,8 +33,6 @@ prodrouter.get('/getAvgRating/:productid', async (req, res) => {
     logger.info('================ GET getAvgRating');
     try {
 		const productid = req.params.productid;
-    	const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-    	const contract = new web3.eth.Contract(abi, address);
     	const response = await contract.methods.getProductAvgRating(productid).call();
 		res.json({productname : response[0], avgRating: parseInt(response[1])/10});
 	}
@@ -46,8 +46,6 @@ prodrouter.get('/getAvgRating/:productid', async (req, res) => {
 prodrouter.get('/getTotal', async (req, res) => {
     logger.info('================ GET getTotal');
     try {
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-    	const contract = new web3.eth.Contract(abi, address);
     	const response = await contract.methods.getTotalProducts().call();
 		res.json({ success: true, totalProducts: parseInt(response) });
 	}
@@ -62,8 +60,6 @@ prodrouter.get('/getDetails/:productid', async (req, res) => {
     logger.info('================ GET getDetails');
     try {
 		const productid = req.params.productid;
-    	const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-    	const contract = new web3.eth.Contract(abi, address);
     	const response = await contract.methods.getProduct(productid).call();
 		var jsonResponse = {
 			ProductName : response[0],
@@ -81,8 +77,6 @@ prodrouter.get('/getDetails/:productid', async (req, res) => {
 });
 
 async function getReviewdDetailsForUserLocal(pid, usr) {
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const productid = pid;
 		const user = usr;
 		
@@ -127,8 +121,6 @@ prodrouter.get('/getAllDetailes', async (req, res) => {
     logger.info('================ GET getAllDetailes');
 
 	try {
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const allPids = await contract.methods.getAllProductPids().call();
 
 		var allProducts = []; 
@@ -160,8 +152,6 @@ prodrouter.get('/getAllUsers/:productid', async (req, res) => {
 
 	try {
 		const productid = req.params.productid;
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const allUsersDetails = await contract.methods.getAllUsersForProduct(productid).call();
 		res.json(allUsersDetails);
 	}
@@ -178,8 +168,6 @@ prodrouter.get('/getUserComments/:productid/:user', async (req, res) => {
 	try {
 		const productid = req.params.productid;
 		const user = req.params.user;
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const userComments = await contract.methods.getUserComments(productid, user).call();
 		res.json(userComments);
 	}
@@ -195,8 +183,6 @@ prodrouter.get('/getUserRating/:productid/:user', async (req, res) => {
     try {
 		const productid = req.params.productid;
 		const user = req.params.user;
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const userRating = await contract.methods.getUserRating(productid, user).call();
 		res.json(userRating);
 	}
@@ -213,8 +199,6 @@ prodrouter.get('/getUserDateOfReview/:productid/:user', async (req, res) => {
 	try{
 		const productid = req.params.productid;
 		const user = req.params.user;
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const dateOfReview = await contract.methods.getUserDateOfReview(productid, user).call();
 		res.json(dateOfReview);
 	}
@@ -234,8 +218,6 @@ prodrouter.get('/getAllReviewedDetails/:productid', async (req, res) => {
     logger.info('================ GET getAllReviewedDetails');
     
 	try {
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		const productid = req.params.productid;
 		var allReviews = [];
 
@@ -272,8 +254,6 @@ prodrouter.post('/add', async (req, res) => {
 		let passphrase = req.body.passphrase;
 
 		var response = "";
-		const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
-		const contract = new web3.eth.Contract(abi, address);
 		let isValidTransaction = false;
 		let date = (new Date()).getTime();
 		let currentTime = parseInt(date / 1000);

@@ -17,13 +17,13 @@ log4js.configure({
         }
 });
 var logger = log4js.getLogger('REVIEWSYS:ACCOUNT');
+const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
 
 // Create new wallet
 accountrouter.post('/create', async (req, res) => {
     logger.info('================ POST on create account');
     try {
         var passphrase = req.body.passphrase;
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
         const result = await web3.eth.personal.newAccount(passphrase);
         res.json({ success: true, walletAddress: result});
     }
@@ -38,7 +38,6 @@ accountrouter.post('/create', async (req, res) => {
 accountrouter.get('/listAll', async (req, res) => {
     logger.info('================ GET on list all accounts');
     try {
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
         const response = await web3.eth.personal.getAccounts();
         res.json({success: true, accounts: {allAccounts: response}});
     }
@@ -53,7 +52,6 @@ accountrouter.post('/lock', async (req, res) => {
     logger.info('================ POST lock');
     try {
         user = req.body.user;
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
         const result = await web3.eth.personal.lockAccount(user);
         res.json({ success: true, AccountLocked: result});
     }
@@ -69,7 +67,6 @@ accountrouter.post('/unlock', async (req, res) => {
     try {
         var user = req.body.user;
         var passphrase = req.body.passphrase; 
-        const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
         const result = await web3.eth.personal.unlockAccount(user,passphrase,0);
         res.json({success: true, AccountunLocked: result});
     }
