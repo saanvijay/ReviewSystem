@@ -1,5 +1,5 @@
-clientAPI/node_modules/
-clientAPI/package-lock.json
+serverAPI/node_modules/
+serverAPI/package-lock.json
 review-app/node_modules/
 
 
