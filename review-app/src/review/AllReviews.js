@@ -33,7 +33,9 @@ class AllReviewsDialog extends React.Component {
        
     } 
      viewAllReviews(props) {
-           axios.get("http://localhost:8000/product/getAllReviewedDetails/" + this.props.productid).then( res => {
+           axios.get("http://localhost:8000/product/getAllReviewedDetails/" + this.props.productid, 
+           {headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}}
+           ).then( res => {
                this.setState({
                 allReviewData: res.data
                })

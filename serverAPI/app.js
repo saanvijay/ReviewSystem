@@ -4,6 +4,7 @@ const express = require('express');
 var app = express();
 app.use(express.json());
 var cors = require('cors');
+app.use(cors());
 
 const mongoose = require('mongoose');
 const userRouter = require('./userRouter');
