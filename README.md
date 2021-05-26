@@ -35,12 +35,14 @@ All the data will be stored and verified in Ethereum Private Blockchain.
     - Select the Solidity 4.24 version compiler and compile it.
     - Make sure you have dummy Ether in your wallet and in Remix click Deploy
     - Copy the contract address and ABI
-    - Open clientAPI/product.js and clientAPI/review.js and add ABI and contract address
+    - Open .env and add ABI and contract address
     - cd ClinetAPI; npm install; npm start
 
 3. Configure Blockchain Explorer
     - git clone https://github.com/etherparty/explorer
-    - cd explorer; npm start
+    - cd explorer
+    - npm install 
+    - npm start
 
 4. UI Setup
     - cd review-app

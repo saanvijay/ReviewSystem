@@ -1,11 +1,13 @@
 'use strict';
-const request = require('supertest');
+const jwt = require('jsonwebtoken');
 var express = require('express');
 const prodrouter = express.Router();
 prodrouter.use(express.json());
 
 const Web3API = require('web3');
 require('dotenv/config');
+
+const userRouter = require('./userRouter');
 
 var cors = require('cors');
 prodrouter.options('*', cors());
@@ -28,8 +30,25 @@ log4js.configure({
 });
 var logger = log4js.getLogger('REVIEWSYS:PRODUCT');
 
+// Validate User (Check jwt token)
+const ValidateUser = (req, res, next) => {
+    var token = req.header('auth');
+    req.token = token;
+    next();
+}
+
+// jwt verify the token with secret key
+var JwtVerify = (req, res) => {
+    jwt.verify(req.token, process.env.API_SECRET, async(err, data) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+    });
+}
+
 // Get product average rating
-prodrouter.get('/getAvgRating/:productid', async (req, res) => {
+prodrouter.get('/getAvgRating/:productid', ValidateUser, async (req, res) => {
+	await JwtVerify(req, res);
     logger.info('================ GET getAvgRating');
     try {
 		const productid = req.params.productid;
@@ -43,7 +62,7 @@ prodrouter.get('/getAvgRating/:productid', async (req, res) => {
 });
 
 // Get total number of products in the review system
-prodrouter.get('/getTotal', async (req, res) => {
+prodrouter.get('/getTotal', ValidateUser, async (req, res) => {
     logger.info('================ GET getTotal');
     try {
     	const response = await contract.methods.getTotalProducts().call();
@@ -56,8 +75,9 @@ prodrouter.get('/getTotal', async (req, res) => {
 });
 
 // Get product details for productid
-prodrouter.get('/getDetails/:productid', async (req, res) => {
+prodrouter.get('/getDetails/:productid', ValidateUser, async (req, res) => {
     logger.info('================ GET getDetails');
+	await JwtVerify(req, res);
     try {
 		const productid = req.params.productid;
     	const response = await contract.methods.getProduct(productid).call();
@@ -103,6 +123,7 @@ async function getReviewdDetailsForUserLocal(pid, usr) {
 }
 
 const  getReviewedDetailsForUser = async (req, res, next) => {
+	//await JwtVerify(req, res);
 	try {
 		let response = await getReviewdDetailsForUserLocal(req.params.productid, req.params.user);
 		res.json(response)
@@ -117,7 +138,8 @@ const  getReviewedDetailsForUser = async (req, res, next) => {
 prodrouter.get('/getReviewedDetails/:productid/:user', getReviewedDetailsForUser);
 
 // Get all product details
-prodrouter.get('/getAllDetailes', async (req, res) => {
+prodrouter.get('/getAllDetailes', ValidateUser, async (req, res) => {
+	await JwtVerify(req, res);
     logger.info('================ GET getAllDetailes');
 
 	try {
@@ -147,8 +169,9 @@ prodrouter.get('/getAllDetailes', async (req, res) => {
 });
 
 // Get all users for productid
-prodrouter.get('/getAllUsers/:productid', async (req, res) => {
+prodrouter.get('/getAllUsers/:productid', ValidateUser, async (req, res) => {
     logger.info('================ GET getAllUsers');
+	await JwtVerify(req, res);
 
 	try {
 		const productid = req.params.productid;
@@ -162,8 +185,9 @@ prodrouter.get('/getAllUsers/:productid', async (req, res) => {
 });
 
 // Get user comments for particular user for productid
-prodrouter.get('/getUserComments/:productid/:user', async (req, res) => {
+prodrouter.get('/getUserComments/:productid/:user', ValidateUser, async (req, res) => {
     logger.info('================ GET getUserComments');
+	await JwtVerify(req, res);
     
 	try {
 		const productid = req.params.productid;
@@ -178,8 +202,9 @@ prodrouter.get('/getUserComments/:productid/:user', async (req, res) => {
 });
 
 // Get user rating for particular user for productid
-prodrouter.get('/getUserRating/:productid/:user', async (req, res) => {
+prodrouter.get('/getUserRating/:productid/:user', ValidateUser, async (req, res) => {
     logger.info('================ GET getUserRating');
+	await JwtVerify(req, res);
     try {
 		const productid = req.params.productid;
 		const user = req.params.user;
@@ -192,9 +217,10 @@ prodrouter.get('/getUserRating/:productid/:user', async (req, res) => {
 	}
 });
 
-// Get user rdate of review for productid
-prodrouter.get('/getUserDateOfReview/:productid/:user', async (req, res) => {
+// Get user date of review for productid
+prodrouter.get('/getUserDateOfReview/:productid/:user', ValidateUser, async (req, res) => {
     logger.info('================ GET getUserDateOfReview');
+	await JwtVerify(req, res);
     
 	try{
 		const productid = req.params.productid;
@@ -214,8 +240,9 @@ function onlyUniqueUsers(value, index, self) {
   }
 
 // Get user reviewed details for particular user for productid
-prodrouter.get('/getAllReviewedDetails/:productid', async (req, res) => {
+prodrouter.get('/getAllReviewedDetails/:productid', ValidateUser, async (req, res) => {
     logger.info('================ GET getAllReviewedDetails');
+	await JwtVerify(req, res);
     
 	try {
 		const productid = req.params.productid;
@@ -244,8 +271,9 @@ prodrouter.get('/getAllReviewedDetails/:productid', async (req, res) => {
 });
 
 // Add product
-prodrouter.post('/add', async (req, res) => {
+prodrouter.post('/add', ValidateUser, async (req, res) => {
     logger.info('================ POST add');
+	await JwtVerify(req, res);
 	try {
 		let from = req.body.from;
 		let productname = req.body.productname;

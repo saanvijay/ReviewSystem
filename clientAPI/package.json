@@ -4,7 +4,7 @@
   "description": "A REST api supporting the Review System application",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "engines": {
     "node": ">=14.0.0 <15.0",
@@ -12,6 +12,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
@@ -25,8 +26,11 @@
     "fetch": "^1.1.0",
     "fs-extra": "^2.0.0",
     "hasha": "^5.2.2",
+    "jsonwebtoken": "^8.5.1",
     "keythereum": "^1.2.0",
     "log4js": "^6.3.0",
+    "mongoose": "^5.12.11",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
     "sha256": "^0.2.0",
     "supertest": "^6.1.3",

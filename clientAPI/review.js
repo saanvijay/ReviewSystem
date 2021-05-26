@@ -1,6 +1,7 @@
 'use strict';
 
 var log4js = require('log4js');
+var jwt = require('jsonwebtoken');
 var logger = log4js.getLogger('REVIEWSYS:REVIEW');
 const Web3API = require('web3');
 
@@ -17,9 +18,26 @@ const address = process.env.CONTRACTADDRESS;
 const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
 const contract = new web3.eth.Contract(abi, address);
 
+// Validate User (Check jwt token)
+const ValidateUser = (req, res, next) => {
+    var token = req.header('auth');
+    req.token = token;
+    next();
+}
+
+// jwt verify the token with secret key
+var JwtVerify = (req, res) => {
+    jwt.verify(req.token, process.env.API_SECRET, async(err, data) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+    });
+}
+
 // Review product
-reviewrouter.post('/reviewnow', async (req, res) => {
+reviewrouter.post('/reviewnow', ValidateUser, async (req, res) => {
     logger.info('================ POST reviewnow');
+    await JwtVerify(req, res);
     try {
         let from = req.body.from;
         let productid = req.body.productid;
@@ -43,8 +61,9 @@ reviewrouter.post('/reviewnow', async (req, res) => {
 });
 
 // Get transaction details
-reviewrouter.get('/transactionDetails/:txid', async (req, res) => {
+reviewrouter.get('/transactionDetails/:txid', ValidateUser, async (req, res) => {
     logger.info('================ GET transactionDetails');
+    await JwtVerify(req, res);
     try {
         const txid = req.params.txid;
         const details = await web3.eth.getTransactionReceipt(txid);

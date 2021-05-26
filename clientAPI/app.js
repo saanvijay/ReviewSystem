@@ -3,8 +3,13 @@
 const express = require('express');
 var app = express();
 app.use(express.json());
-
 var cors = require('cors');
+
+const mongoose = require('mongoose');
+const userRouter = require('./userRouter');
+app.use('/api', userRouter);
+
+
 
 var log4js = require('log4js');
 log4js.configure({
@@ -34,12 +39,16 @@ app.options('*', cors());
 app.use(cors());
 
 // Start Server
-var server = app.listen(port, function() {
+var server = app.listen(port, () => {
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  Listening on: http://%s:%s  ******************',host,port);
 server.timeout = 240000;
 });
 
+//MongoDB connection
+mongoose.connect('mongodb://localhost:27017/blockchainAuth', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+  logger.info('****************** MongoDB connected ************************');
+});
 // Health check - can be called by load balancer to check health of REST API
 app.get('/health', async (req, res) => {
         res.sendStatus(200);
