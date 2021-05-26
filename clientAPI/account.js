@@ -2,10 +2,13 @@ const Web3API = require('web3');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const accountrouter = express.Router();
+accountrouter.use(express.json());
 
 var cors = require('cors');
 accountrouter.options('*', cors());
 accountrouter.use(cors());
+
+const common = require('./common');
 
 var blockchainURL = process.env.RPCURL;
 var log4js = require('log4js');
@@ -20,27 +23,12 @@ log4js.configure({
 var logger = log4js.getLogger('REVIEWSYS:ACCOUNT');
 const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
 
-// Validate User (Check jwt token)
-const validateUser = (req, res, next) => {
-    var token = req.header('auth');
-    req.token = token;
-    next();
-}
-
-// jwt verify the token with secret key
-var jwtVerify = (req, res) => {
-    jwt.verify(req.token, process.env.API_SECRET, async(err, data) => {
-        if (err) {
-            return res.sendStatus(403);
-        }
-    });
-}
 
 // Create new wallet
-accountrouter.post('/create', validateUser, async (req, res) => {
+accountrouter.post('/create', common.ValidateUser, async (req, res) => {
     logger.info('================ POST on create account');
 
-    await jwtVerify(req, res);
+    await common.JwtVerify(req, res);
 
     try {
         var passphrase = req.body.passphrase;
@@ -55,9 +43,9 @@ accountrouter.post('/create', validateUser, async (req, res) => {
 
 
 // List all accounts
-accountrouter.get('/listAll', validateUser, async (req, res) => {
+accountrouter.get('/listAll', common.ValidateUser, async (req, res) => {
     logger.info('================ GET on list all accounts');
-    await jwtVerify(req, res);
+    await common.JwtVerify(req, res);
     try {
         const response = await web3.eth.personal.getAccounts();
         res.json({success: true, accounts: {allAccounts: response}});
@@ -69,9 +57,9 @@ accountrouter.get('/listAll', validateUser, async (req, res) => {
 });
 
 // lock account
-accountrouter.post('/lock', validateUser, async (req, res) => {
+accountrouter.post('/lock', common.ValidateUser, async (req, res) => {
     logger.info('================ POST lock');
-    await jwtVerify(req, res);
+    await common.JwtVerify(req, res);
     try {
         user = req.body.user;
         const result = await web3.eth.personal.lockAccount(user);
@@ -84,9 +72,9 @@ accountrouter.post('/lock', validateUser, async (req, res) => {
 });
 
 // unlock account
-accountrouter.post('/unlock', validateUser, async (req, res) => {
+accountrouter.post('/unlock', common.ValidateUser, async (req, res) => {
     logger.info('================ POST unlock');
-    await jwtVerify(req, res);
+    await common.JwtVerify(req, res);
     try {
         var user = req.body.user;
         var passphrase = req.body.passphrase; 
