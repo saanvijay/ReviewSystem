@@ -21,6 +21,7 @@ All the data will be stored and verified in Ethereum Private Blockchain.
 3. NodeJS 
 4. ReactJS 
 5. Metamask Wallet
+6. MongoDB
 
 ## Steps
 1. Setup Blockchain Network
@@ -36,11 +37,11 @@ All the data will be stored and verified in Ethereum Private Blockchain.
     - Make sure you have dummy Ether in your wallet and in Remix click Deploy
     - Copy the contract address and ABI
     - Open .env and add ABI and contract address
-    - cd ClinetAPI; npm install; npm start
+    - cd ServerAPI; npm install; npm start
 
 3. Configure Blockchain Explorer
     - git clone https://github.com/etherparty/explorer
-    - cd explorer
+    - cd explorer (edit package.json and set port to 9000)
     - npm install 
     - npm start
 

@@ -1,14 +1,15 @@
 import React from 'react';
 import './App.css';
+import axios from 'axios';
 const IPFS = require('ipfs-api');
 const ipfs = new IPFS({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
 
-
-class ProductsForm extends React.Component 
+class AddProductForm extends React.Component 
 {
     constructor() {
         super();
         this.state = {
+            productData:[],
             User:"",
             Pname: "",
             Price:"",
@@ -17,6 +18,28 @@ class ProductsForm extends React.Component
             ImageBuffer:""
 
         }
+    }
+    addProduct = productData => {
+        axios.post("http://localhost:8000/product/add", {
+            from: this.state.User,
+            productname: this.state.Pname,
+            price: this.state.Price,
+            imagehash:this.state.ImageHash,
+            passphrase:this.state.Passphrase
+        }, {
+            headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}
+        }).then( res => {
+            console.log(res.data.txid);
+            alert("Transaction Successful\n" + res.data.txid);
+           // this.getAllProducts();
+            this.setState({
+                lastTxId: res.data.txid
+            })
+            this.props.history.push('/home');
+        })
+        .catch(err => {
+            alert(err);
+        })
     }
     infoChange = event => {
         const {name, value} = event.target;
@@ -51,12 +74,18 @@ class ProductsForm extends React.Component
                     imagehash:this.state.ImageHash,
                     passphrase:this.state.Passphrase
                 }
-                this.props.productData(data);
+                 this.addProduct(data);
+               // this.state.productData(data);
                 console.log("ImageHash is", this.state.ImageHash);
+                //this.props.history.push('/home');
             } else {
                 console.log(err);
             }
         })
+    }
+    infoClose = event => {
+        event.preventDefault();
+        window.location.href = 'home';
     }
 
     componentWillReceiveProps(props) {
@@ -107,9 +136,11 @@ class ProductsForm extends React.Component
                 />
             </div>
             <button type="submit" class="btn btn-primary">Add Product</button>
+            &nbsp;&nbsp;
+            <button onClick={this.infoClose} class="btn btn-primary">Close</button>
             </form>
         )
     }
 }
 
-export default ProductsForm;
+export default AddProductForm;
