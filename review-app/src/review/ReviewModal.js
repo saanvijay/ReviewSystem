@@ -44,11 +44,10 @@ class ReviewDialog extends React.Component {
       productid: this.props.productid,
       rating: this.state.rating,
       comments: this.refs.comments.value,
-      passphrase: this.refs.pass.value
-
-    }).then(res => {
-      //alert("ProductReviewed Successfully" + res.data.txid);
-      toast.success(<div>ProductReviewed Successfully {res.data.txid}</div>);
+      passphrase: this.refs.pass.value}, {
+        headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}
+    }).then( res => {
+      alert("ProductReviewed Successfully" + res.data.txid);
       this.setState({ isOpen: false });
       this.reload();
     }

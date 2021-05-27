@@ -31,6 +31,7 @@ class Login extends React.Component
             res => { 
                localStorage.setItem('auth', JSON.stringify(res.data));
                this.props.history.push('/home');
+               window.location.reload();
         })
         .catch(error => {
             alert(error.response.data);
@@ -40,7 +41,6 @@ class Login extends React.Component
     infoSubmitReg = event => {
         event.preventDefault();
         window.location.href = 'register';
-        
     }
 
     componentWillReceiveProps(props) {
