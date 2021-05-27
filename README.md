@@ -56,28 +56,28 @@ All the data will be stored and verified in Ethereum Private Blockchain.
 ### ReactJS server is running on port http://localhost:3000
 
 ## Login Page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Login.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Login.png)
 
 ## Register Page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Register.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Register.png)
 
 ## Home page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Home.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Home.png)
 
 ## Create Wallet/View All Wallets
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Wallet.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Wallet.png)
 
 ## Add Product
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Addproduct.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Addproduct.png)
 
 ## View Transaction In Blockchain Explorer
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Explorer.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Explorer.png)
 
 ## Review Product
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Review.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Review.png)
 
 ## View All Reviews
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/dev/imgs/Viewallreviews.png)
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Viewallreviews.png)
 
 ## License
 
