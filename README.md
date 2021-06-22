@@ -53,7 +53,7 @@ All the data will be stored and verified in Ethereum Private Blockchain.
 ### Blockchain is running on port http://localhost:8545
 ### NodeJS server is running on port http://localhost:8000
 ### Blockchain Explorer is running on port http://localhost:9000
-### ReactJS server is running on port http://localhost:3000
+### ReactJS client is running on port http://localhost:3000
 
 ## Login Page
 ![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Login.png)
