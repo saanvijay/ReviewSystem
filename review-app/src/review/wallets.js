@@ -21,18 +21,21 @@ class WalletForm extends React.Component {
             alert("Wallet Created Successfully" + res.data.walletAddress);
             //, "Wallet Address : ", res.data.walletAddress);
             this.allwallets();
-
-    })
+         })
     }
     
     allwallets = () => {
         axios.get("http://localhost:8000/account/listAll", {
             headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}
-        }).then( res => {
+        })
+        .then( res => {
             this.setState({
                 wallets : res.data.accounts.allAccounts
             })
             
+        })
+        .catch(err => {
+            alert(err.response.data);
         })
     }
     infoCloseWallets = event => {

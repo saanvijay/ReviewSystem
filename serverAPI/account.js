@@ -1,4 +1,6 @@
-const Web3API = require('web3');
+
+const Web3 = require('web3');
+const web3 = new Web3('http://localhost:8545');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const accountrouter = express.Router();
@@ -8,20 +10,22 @@ var cors = require('cors');
 accountrouter.options('*', cors());
 accountrouter.use(cors());
 
+//var rpcURL = process.env.RPCURL;
+//const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
+
 const common = require('./common');
 
-var blockchainURL = process.env.RPCURL;
+
 var log4js = require('log4js');
 log4js.configure({
-        appenders: {
-          out: { type: 'stdout' },
-        },
-        categories: {
-          default: { appenders: ['out'], level: 'info' },
-        }
+    appenders: {
+        out: { type: 'stdout' },
+    },
+    categories: {
+        default: { appenders: ['out'], level: 'info' },
+    }
 });
 var logger = log4js.getLogger('REVIEWSYS:ACCOUNT');
-const web3 = new Web3API(new Web3API.providers.HttpProvider(blockchainURL));
 
 
 // Create new wallet
@@ -32,12 +36,19 @@ accountrouter.post('/create', common.ValidateUser, async (req, res) => {
 
     try {
         var passphrase = req.body.passphrase;
-        const result = await web3.eth.personal.newAccount(passphrase);
-        res.json({ success: true, walletAddress: result});
+        var account = web3.eth.accounts.create(passphrase); 
+        var pKey = account["privateKey"];
+        pKey = pKey.substring(2);
+        const wallet = await web3.eth.personal.importRawKey(pKey, passphrase);
+        console.log({
+            walletAddress: wallet,
+            privateKey: pKey
+        });
+        res.json({ success: true, walletAddress: wallet, privateKey:  pKey});
     }
-    catch(error) {
+    catch (error) {
         logger.error('##### Create account/wallet Failed - %s', error.toString());
-        res.json({ success: false, message: error.toString()});
+        res.json({ success: false, message: error.toString() });
     }
 });
 
@@ -48,9 +59,10 @@ accountrouter.get('/listAll', common.ValidateUser, async (req, res) => {
     await common.JwtVerify(req, res);
     try {
         const response = await web3.eth.personal.getAccounts();
-        res.json({success: true, accounts: {allAccounts: response}});
+        //const response = await web3.eth.getAccounts();
+        res.json({ success: true, accounts: { allAccounts: response } });
     }
-    catch(error) {
+    catch (error) {
         logger.error('##### listAll - Failed ');
         res.json({ success: false, message: error.toString() });
     }
@@ -63,9 +75,9 @@ accountrouter.post('/lock', common.ValidateUser, async (req, res) => {
     try {
         user = req.body.user;
         const result = await web3.eth.personal.lockAccount(user);
-        res.json({ success: true, AccountLocked: result});
+        res.json({ success: true, AccountLocked: result });
     }
-    catch(error) {
+    catch (error) {
         logger.error('##### POST on lockAccount - Failed ');
         res.json({ success: false, message: error.toString() });
     }
@@ -77,11 +89,11 @@ accountrouter.post('/unlock', common.ValidateUser, async (req, res) => {
     await common.JwtVerify(req, res);
     try {
         var user = req.body.user;
-        var passphrase = req.body.passphrase; 
-        const result = await web3.eth.personal.unlockAccount(user,passphrase,0);
-        res.json({success: true, AccountunLocked: result});
+        var passphrase = req.body.passphrase;
+        const result = await web3.eth.personal.unlockAccount(user, passphrase, 0);
+        res.json({ success: true, AccountunLocked: result });
     }
-    catch(error) {
+    catch (error) {
         logger.error('##### POST on unlockAccount - Failed ');
         res.json({ success: false, message: error.toString() });
     }

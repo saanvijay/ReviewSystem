@@ -6,6 +6,8 @@ import AllReviewsDialog from './AllReviews';
 import axios from 'axios';
 import AddProductForm from './Products';
 import { Link} from "react-router-dom";
+import detectEthereumProvider from '@metamask/detect-provider';
+import  Web3 from 'web3';
 
 Modal.setAppElement("#root");
 
@@ -31,6 +33,16 @@ class ProductForm extends React.Component
     viewExplorer() {
         window.open('http://localhost:9000', '_blank');
     }
+    async connectMetamask() {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            await window.ethereum.enable();
+          } else if (window.web3){
+            window.web3 = new Web3(window.web3.currentProvider);
+          } else {
+            alert('This browser does not support Ethereum');
+          }
+    }
     
     render() {
         return(
@@ -38,7 +50,9 @@ class ProductForm extends React.Component
                     <div className = "row"> 
                         <div className = "col-1" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh', background: 'green'}}>
                             <div className="nav-right nav-menu">
-                            <a> <Link to="/wallets"> Wallets </Link> </a>
+                                <button onClick={this.connectMetamask} class="btn btn-primary"> Connect Metamask  </button>
+                                <p/>
+                                <a> <Link to="/wallets"> Wallets </Link> </a>
                                 <p/>
                                 <a> <Link to="/addproduct"> Add Product </Link> </a> 
                                 <p/>

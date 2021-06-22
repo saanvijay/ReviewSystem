@@ -25,6 +25,7 @@ reviewrouter.post('/reviewnow', common.ValidateUser, async (req, res) => {
     logger.info('================ POST reviewnow');
     await common.JwtVerify(req, res);
     try {
+        
         let from = req.body.from;
         let productid = req.body.productid;
         let rating = req.body.rating;
@@ -35,13 +36,15 @@ reviewrouter.post('/reviewnow', common.ValidateUser, async (req, res) => {
         
         let date = (new Date()).getTime();
         let currentTime = parseInt(date / 1000);
-        const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
+       // const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
+       logger.info("from " +from);
         
+       
         response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
         res.json({ success: true, txid: response.transactionHash });
     }
     catch(error) {
-        logger.error('##### POST on reviewnow - Failed ');
+        logger.error('##### POST on reviewnow - Failed ', error);
         res.json({ success: false, message: error.toString() });
     }
 });
@@ -60,6 +63,7 @@ reviewrouter.get('/transactionDetails/:txid', common.ValidateUser, async (req, r
         res.json({ success: false, message: error.toString() });
     }
 });
+
 
 
 module.exports = reviewrouter;
