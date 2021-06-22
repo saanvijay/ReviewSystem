@@ -50,7 +50,7 @@ class ProductForm extends React.Component
                     <div className = "row"> 
                         <div className = "col-1" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh', background: 'green'}}>
                             <div className="nav-right nav-menu">
-                                <button onClick={this.connectMetamask} class="btn btn-primary"> Connect Metamask  </button>
+                                <a href="#" onClick={this.connectMetamask}> <Link to="/home"> </Link>Metamask  </a>
                                 <p/>
                                 <a> <Link to="/wallets"> Wallets </Link> </a>
                                 <p/>
