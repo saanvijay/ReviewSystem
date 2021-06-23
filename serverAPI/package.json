@@ -23,6 +23,7 @@
     "ethereumjs-common": "^1.5.2",
     "ethereumjs-testrpc": "^6.0.3",
     "ethereumjs-tx": "^2.1.2",
+    "ethers": "^5.3.1",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "fetch": "^1.1.0",

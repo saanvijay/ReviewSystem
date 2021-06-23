@@ -48,7 +48,7 @@ class ProductForm extends React.Component
         return(
             <div className = "container">
                     <div className = "row"> 
-                        <div className = "col-1" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh', background: 'green'}}>
+                        <div className = "col-1" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh', background: 'gray'}}>
                             <div className="nav-right nav-menu">
                                 <a href="#" onClick={this.connectMetamask}> <Link to="/home"> </Link>Metamask  </a>
                                 <p/>

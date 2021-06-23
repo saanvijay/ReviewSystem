@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
+    "ethers": "^5.3.1",
     "ipfs-api": "^26.1.2",
     "mdbreact": "^5.0.2",
     "nodemon": "^2.0.7",
@@ -22,6 +23,7 @@
     "react-toastify": "^7.0.4",
     "reactstrap": "^8.9.0",
     "recompose": "^0.30.0",
+    "solc": "^0.8.6",
     "toastr": "^2.1.4",
     "web-vitals": "^1.1.2"
   },

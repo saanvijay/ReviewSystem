@@ -18,7 +18,7 @@ class WalletForm extends React.Component {
     CreateWallet = event => {
         event.preventDefault();
         axios.post("http://localhost:8000/account/create",{passphrase:this.refs.pass.value}, {headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}}).then( res => {
-            alert("Wallet Created Successfully" + res.data.walletAddress);
+            alert("Wallet Created Successfully\n WalletAddress: " + res.data.walletAddress +  "\nPrivateKey: "+ res.data.privateKey);
             //, "Wallet Address : ", res.data.walletAddress);
             this.allwallets();
          })
