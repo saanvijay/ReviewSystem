@@ -55,29 +55,8 @@ All the data will be stored and verified in Ethereum Private Blockchain.
 ### Blockchain Explorer is running on port http://localhost:9000
 ### ReactJS client is running on port http://localhost:3000
 
-## Login Page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Login.png)
-
-## Register Page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Register.png)
-
-## Home page
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Home.png)
-
-## Create Wallet/View All Wallets
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Wallet.png)
-
-## Add Product
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Addproduct.png)
-
-## View Transaction In Blockchain Explorer
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Explorer.png)
-
-## Review Product
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Review.png)
-
-## View All Reviews
-![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/Viewallreviews.png)
+## Demo
+![alt text](https://github.com/saanvijay/ReviewSystem/blob/main/imgs/ReviewSystem-Demo.mov)
 
 ## License
 

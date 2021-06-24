@@ -6,7 +6,8 @@ class WalletForm extends React.Component {
     constructor() {
         super();
         this.state = {
-            wallets:[]
+            wallets:[],
+            privateKey:""
         }
         this.CreateWallet = this.CreateWallet.bind(this);
     }
@@ -20,6 +21,7 @@ class WalletForm extends React.Component {
         axios.post("http://localhost:8000/account/create",{passphrase:this.refs.pass.value}, {headers: {'auth': `${JSON.parse(localStorage.getItem('auth'))}`}}).then( res => {
             alert("Wallet Created Successfully\n WalletAddress: " + res.data.walletAddress +  "\nPrivateKey: "+ res.data.privateKey);
             //, "Wallet Address : ", res.data.walletAddress);
+            this.setState({privateKey: res.data.privateKey});
             this.allwallets();
          })
     }
@@ -52,6 +54,10 @@ class WalletForm extends React.Component {
                             <input ref="pass" type="password" class="form-control" placeholder="Enter Passphrase"/>
                             <button onClick={this.CreateWallet} class="btn btn-primary">Create Wallet</button>&nbsp;&nbsp;
                             <button onClick={this.infoCloseWallets} class="btn btn-primary">Close</button>
+                     </div>
+                     <div> 
+                         <label style={{color: 'brown', fontWeight: 'bold' }}>Current Wallet Privatekey</label>&nbsp;&nbsp;
+                         <label style={{color: 'green', fontWeight: 'bold' }}>{this.state.privateKey}</label>
                      </div>
                      <div> 
                          <label style={{color: 'brown', fontWeight: 'bold' }}>All Wallets</label>
