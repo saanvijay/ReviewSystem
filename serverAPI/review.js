@@ -42,15 +42,12 @@ reviewrouter.post('/reviewnow', common.ValidateUser, async (req, res) => {
         
         let date = (new Date()).getTime();
         let currentTime = parseInt(date / 1000);
-       // const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
+        // web3 interface
+        // const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
+        // response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
        
-      // var signer = from;
-       
-      // logger.info("signer " + await signer.getAddress());
-      // reviewContract.approve(productid, rating, comments, currentTime);
-       
-       // response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
-        response = await reviewContract.reviewProduct(productid, rating, comments, currentTime);
+       // Metamask  
+       response = await reviewContract.reviewProduct(productid, rating, comments, currentTime);
         res.json({ success: true, txid: response.transactionHash });
     }
     catch(error) {

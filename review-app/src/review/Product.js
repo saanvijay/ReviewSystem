@@ -9,6 +9,7 @@ import { Link} from "react-router-dom";
 import detectEthereumProvider from '@metamask/detect-provider';
 import  Web3 from 'web3';
 
+
 Modal.setAppElement("#root");
 
 class ProductForm extends React.Component 
