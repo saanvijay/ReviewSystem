@@ -4,7 +4,6 @@ var log4js = require('log4js');
 var jwt = require('jsonwebtoken');
 var logger = log4js.getLogger('REVIEWSYS:REVIEW');
 const Web3API = require('web3');
-const ethers = require('ethers');
 
 var express = require('express');
 var reviewrouter = express.Router();
@@ -18,11 +17,6 @@ const abi = JSON.parse(process.env.ABI);
 const address = process.env.CONTRACTADDRESS;
 const web3 = new Web3API(new Web3API.providers.HttpProvider(rpcURL));
 const contract = new web3.eth.Contract(abi, address);
-const ethersProvider = new ethers.providers.Web3Provider(web3.currentProvider);
-const signer = ethersProvider.getSigner(0);
-const reviewContract = new ethers.Contract(address, abi, signer);
-
-
 
 const common = require('./common');
 
@@ -43,11 +37,9 @@ reviewrouter.post('/reviewnow', common.ValidateUser, async (req, res) => {
         let date = (new Date()).getTime();
         let currentTime = parseInt(date / 1000);
         // web3 interface
-        // const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
-        // response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
+        const unlock = await web3.eth.personal.unlockAccount(from, passphrase, 15000);
+        response = await contract.methods.reviewProduct(productid, rating, comments, currentTime).send({ from: from });
        
-       // Metamask  
-       response = await reviewContract.reviewProduct(productid, rating, comments, currentTime);
         res.json({ success: true, txid: response.transactionHash });
     }
     catch(error) {
