@@ -42,10 +42,9 @@ All the data will be stored and verified in Ethereum Private Blockchain.
     - cd ServerAPI; npm install; npm start
 
 3. Configure Blockchain Explorer
-    - git clone https://github.com/etherparty/explorer
-    - cd explorer (edit package.json and set port to 9000)
-    - npm install 
-    - npm start
+    - git clone https://github.com/web3labs/epirus-free.git
+    - NODE_ENDPOINT=http://172.16.239.1:8545 docker-compose up
+    - http://localhost/
 
 4. UI Setup
     - cd review-app
@@ -54,7 +53,7 @@ All the data will be stored and verified in Ethereum Private Blockchain.
 
 ### Blockchain is running on port http://localhost:8545
 ### NodeJS server is running on port http://localhost:8000
-### Blockchain Explorer is running on port http://localhost:9000
+### Blockchain Explorer is running on port http://localhost
 ### ReactJS client is running on port http://localhost:3000
 
 ## Demo
